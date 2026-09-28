@@ -11,6 +11,9 @@ Trang tài liệu nội bộ tiếng Việt, diễn giải từ đặc tả `pro
 ├── styles.css          # giao diện desktop, tablet, mobile
 ├── proposal-spec.md    # đặc tả gốc (dùng để đối chiếu / tải về)
 ├── revision-notes.md   # ghi chú thay đổi v0.2
+├── research-assignment/
+│   ├── index.html      # phân công research theo thành viên + đánh giá mức độ phù hợp
+│   └── brief.md        # brief phân công gốc
 └── .nojekyll           # để GitHub Pages serve file nguyên bản, không qua Jekyll
 ```
 
@@ -35,3 +38,5 @@ Static site thuần HTML/CSS/JS, publish trực tiếp từ branch `main`:
 3. Branch: **main**, Folder: **/(root)** → Save.
 
 Mỗi lần push lên `main`, GitHub Pages sẽ tự cập nhật trang tại https://namdin05.github.io/testing-demo/.
+
+Trang phân công research: https://namdin05.github.io/testing-demo/research-assignment/

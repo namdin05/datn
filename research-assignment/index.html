@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phân công research · Intelligent Assessment Platform</title>
+<meta name="description" content="Phân công research cho nhóm đồ án Intelligent Assessment Platform và đánh giá mức độ phù hợp của từng miền nghiên cứu.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232d4e9b'/%3E%3Cpath d='M8 9h7v16H8zm9 0h7v16h-7z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip" href="#content">Đến nội dung</a>
+<aside class="sidebar" id="sidebar">
+<a href="../index.html" class="brand"><span class="brand-icon">ia</span><span>Intelligent Assessment<small>Project knowledge base</small></span></a>
+<div class="workspace"><span class="workspace-icon">◇</span> Phân công research <span class="version">v0.1</span></div>
+<nav aria-label="Mục lục chính">
+<p class="nav-label">Phân công</p>
+<a href="#overview" class="nav-link active"><span>◫</span>Tổng quan</a>
+<a href="#goals" class="nav-link"><span>↳</span>Mục tiêu chung</a>
+<a href="#members" class="nav-link"><span>♧</span>Phân công theo người <small>5</small></a>
+<a href="#deliverables" class="nav-link"><span>▤</span>Đầu ra & template</a>
+<p class="nav-label">Đánh giá cho đồ án</p>
+<a href="#assessment" class="nav-link"><span>✓</span>Mức độ phù hợp</a>
+<a href="#overlaps" class="nav-link"><span>⊞</span>Chồng lấn cần phân định</a>
+<a href="#adjustments" class="nav-link"><span>↗</span>Đề xuất điều chỉnh</a>
+<a href="#metrics" class="nav-link"><span>▥</span>Metric & dữ liệu</a>
+<a href="#next" class="nav-link"><span>?</span>Sau research</a>
+</nav>
+<a class="nav-back" href="../index.html">← Về Sổ tay tính năng</a>
+<div class="sidebar-bottom"><span class="draft-dot"></span> Chờ nhóm chốt<small>Đánh giá là đề xuất để thảo luận</small><a href="brief.md" download>Tải brief gốc ↗</a></div>
+</aside>
+<div class="page">
+<header class="topbar"><button class="menu-button" aria-label="Mở mục lục" aria-expanded="false" aria-controls="sidebar">☰</button><div><a href="../index.html">Knowledge base</a> <span>/</span> <strong>Phân công research</strong></div><a href="brief.md">Brief nguồn <span>↗</span></a></header>
+<div class="layout"><main id="content">
+
+<section id="overview" class="intro">
+<div class="doc-meta"><span class="document-icon">◇</span><span>Tài liệu nhóm</span><span class="badge draft">Giai đoạn khảo sát</span></div>
+<h1>Phân công research</h1>
+<p class="lead">Intelligent Assessment Platform</p>
+<p class="intro-text">Bốn thành viên nghiên cứu bốn miền của hệ thống. Nam tổng hợp kết quả, so sánh các hướng, chốt scope và cập nhật proposal. Giai đoạn này chưa chia task coding; mục tiêu là chuẩn bị cho buổi họp tiếp theo với giảng viên.</p>
+<div class="doc-facts"><span><b>5</b> thành viên</span><span><b>4</b> miền research</span><span><b>≥5</b> nguồn mỗi người</span><span><b>Top 3</b> hướng mỗi người</span></div>
+<div class="notice"><span>ⓘ</span><div><strong>Trang gồm hai phần.</strong><p>Phần đầu trình bày phân công đúng theo brief hiện tại. Phần sau đánh giá mức độ phù hợp cho đồ án, đối chiếu với hướng ưu tiên R1–R3 trong <a href="../index.html#research">Sổ tay tính năng</a>, kèm đề xuất điều chỉnh. Nhóm cần chốt phần điều chỉnh trước khi bắt đầu research.</p></div></div>
+<div class="principles"><div><b>Phân theo phần của hệ thống</b><p>Không dựa trên CV hay chuyên môn riêng. Mục tiêu là mọi phần quan trọng đều được nghiên cứu và hạn chế overlap.</p></div><div><b>Đủ dữ liệu để quyết định</b><p>Không yêu cầu mọi kết quả research đều trở thành feature cuối cùng.</p></div></div>
+</section>
+
+<section id="goals">
+<div class="section-title"><h2>Mỗi người cần trả lời được gì?</h2><span class="source">Brief §2, §7</span></div>
+<p>Không liệt kê kiểu “Sản phẩm A có feature X”. Mỗi feature cần đi qua cùng một chuỗi lập luận:</p>
+<div class="flow"><div><span>01</span><b>Giải pháp hiện có</b><small>Sản phẩm, paper, tài liệu chính thức</small></div><div><span>02</span><b>Hạn chế</b><small>Điểm còn thiếu hoặc khoảng trống</small></div><div><span>03</span><b>Hướng đề xuất</b><small>Nhóm làm khác ở đâu</small></div><div><span>04</span><b>Cách đánh giá</b><small>Metric và dữ liệu cụ thể</small></div><div><span>05</span><b>Quyết định scope</b><small>MVP, Advanced, Research hay Stretch</small></div></div>
+<h2 class="small-heading">9 câu hỏi cho mỗi miền</h2>
+<ol class="checklist">
+<li>Các sản phẩm / hệ thống hiện có trên thị trường.</li>
+<li>Các feature tương tự với ý tưởng của nhóm.</li>
+<li>Cách các hệ thống đó giải quyết bài toán.</li>
+<li>Những hạn chế hoặc điểm còn thiếu.</li>
+<li>Feature nào chỉ là baseline.</li>
+<li>Feature nào có tiềm năng thành điểm khác biệt hoặc research contribution.</li>
+<li>Dữ liệu, thuật toán hoặc AI cần thiết.</li>
+<li>Cách đánh giá feature bằng metric cụ thể.</li>
+<li>Mức độ khả thi cho đồ án sinh viên.</li>
+</ol>
+</section>
+
+<section id="members">
+<div class="section-title"><h2>Phân công theo thành viên</h2><span class="source">Brief §3–4</span></div>
+<p>Mở từng miền để xem phạm vi, câu hỏi chính, nguồn tham khảo và metric. Nhãn bên phải là kết quả <a href="#assessment">đánh giá mức độ phù hợp</a>.</p>
+
+<details class="module" id="bao"><summary><span class="module-code">01</span><div><span class="module-title">Bảo — Question Bank & Learning Content</span><span class="module-description">Một Question Bank tốt cần quản lý những dữ liệu và workflow nào để phục vụ lâu dài cho AI generation, exam blueprint và analytics?</span></div><span class="badges"><span class="badge pending">Cần bổ sung</span></span><span class="chevron">+</span></summary><div class="module-content">
+<h4>Tài liệu học phần</h4><ul><li>Quản lý course material; upload PDF / DOCX / PPTX</li><li>Document processing, topic extraction</li><li>Learning outcome</li></ul>
+<h4>Câu hỏi & metadata</h4><ul><li>Question bank, question metadata</li><li>Difficulty, Bloom taxonomy, tags</li><li>Search / filter</li></ul>
+<h4>Vòng đời & cộng tác</h4><ul><li>Question lifecycle: Draft → Review → Approved → Deprecated</li><li>Question versioning, collaboration</li><li>Import question, duplicate detection, question reuse</li></ul>
+<h4>Hệ thống tham khảo</h4><p>Azota · Moodle · Canvas · TAO · Quizizz · QuestionWell</p>
+<p class="rule">Phần lớn là baseline thị trường, giá trị nghiên cứu thấp. Xem <a href="#adjustments">đề xuất nhận thêm Personalization</a>.</p>
+</div></details>
+
+<details class="module" id="lam"><summary><span class="module-code">02</span><div><span class="module-title">Lâm — Exam Blueprint & Exam Generation</span><span class="module-description">Làm thế nào tự động sinh nhiều mã đề khác nhau nhưng vẫn tương đương về nội dung, độ khó và mục tiêu đánh giá?</span></div><span class="badges"><span class="badge mvp">Phù hợp</span></span><span class="chevron">+</span></summary><div class="module-content">
+<h4>Blueprint</h4><ul><li>Exam blueprint, ma trận đề</li><li>Phân bố topic, độ khó, Bloom, loại câu hỏi</li><li>Learning outcome coverage, estimated completion time</li></ul>
+<h4>Sinh đề</h4><ul><li>Randomization, constraint-based question selection, question pool</li><li>Multiple exam forms, equivalent exam generation</li><li>Question locking / replacement, exam preview</li></ul>
+<h4>Tổ chức thi</h4><ul><li>Exam scheduling, exam session</li><li>Autosave, reconnect / recovery, auto submit</li></ul>
+<h4>Hướng kỹ thuật</h4><p>Weighted optimization · constraint solving · heuristic search · integer programming · genetic algorithm</p>
+<h4>Metric</h4><p>Topic Distribution Difference · Difficulty Difference · Bloom Difference · Learning Outcome Coverage · Estimated Time Difference · Question Reuse Rate</p>
+<p class="rule">Có bài toán rõ và metric định lượng. Nên giới hạn thời gian cho phần tổ chức thi vì đó là kỹ thuật baseline.</p>
+</div></details>
+
+<details class="module" id="duy"><summary><span class="module-code">03</span><div><span class="module-title">Duy — AI Question Intelligence & Personalization</span><span class="module-description">AI có thể hỗ trợ sinh, kiểm định và cá nhân hóa câu hỏi như thế nào mà vẫn grounded, explainable và đo được chất lượng?</span></div><span class="badges"><span class="badge risk">Quá tải</span></span><span class="chevron">+</span></summary><div class="module-content">
+<h4>AI Question Generation</h4><ul><li>Document processing, chunking, embedding, retrieval, RAG</li><li>Grounded question generation, source citation, hallucination reduction</li><li>Answer generation, explanation generation</li></ul>
+<h4>Question Intelligence</h4><ul><li>Bloom classification, difficulty prediction</li><li>Ambiguity detection, duplicate detection, distractor quality</li><li>Question validation, Question Health</li></ul>
+<h4>Personalization</h4><ul><li>Student mastery profile, weak topic detection</li><li>Personalized practice, adaptive difficulty</li><li>Learning recommendation, progress update</li></ul>
+<h4>Nguyên tắc</h4><ul><li>AI chỉ đưa suggestion; giảng viên review / approve</li><li>AI output không mặc định là đúng; cần source reference</li><li>Cần metric đánh giá rõ ràng</li></ul>
+<h4>Metric</h4><p>Grounding Accuracy · Factual Correctness · Relevance · Duplicate Rate · Bloom Accuracy · Difficulty Accuracy · Teacher Agreement · Recommendation Effectiveness</p>
+<p class="rule">Ba nhóm việc, mỗi nhóm đủ lớn để thành một hướng nghiên cứu. Personalization là R1, hướng ưu tiên số 1 của đồ án. Xem <a href="#adjustments">đề xuất tách</a>.</p>
+</div></details>
+
+<details class="module" id="hop"><summary><span class="module-code">04</span><div><span class="module-title">Hộp — Paper/OMR, Grading & Item Analysis</span><span class="module-description">Làm thế nào kết nối bài thi giấy và bài thi online vào cùng một assessment lifecycle, từ chấm bài, review đến analytics?</span></div><span class="badges"><span class="badge pending">Cần thu hẹp</span></span><span class="chevron">+</span></summary><div class="module-content">
+<h4>Paper / OMR</h4><ul><li>Generate answer sheet, answer sheet template, QR / exam form identification</li><li>Scan bằng camera, image alignment, bubble detection</li><li>Ambiguous mark detection, multi-mark / blank handling, review uncertain answer</li><li>Batch scan, mapping với exam version, lưu ảnh gốc để audit</li><li>Kết nối kết quả bài giấy với cùng analytics của bài online</li></ul>
+<h4>Grading & Analytics</h4><ul><li>Auto / manual / rubric / AI-assisted grading</li><li>Grading workflow, regrade, grade history</li><li>Item difficulty, item discrimination, distractor effectiveness, question health</li><li>Class analytics, topic performance, learning outcome performance</li></ul>
+<h4>Hệ thống tham khảo</h4><p>ZipGrade · Gradescope · Azota · Moodle · Canvas</p>
+<h4>Metric</h4><p>OMR Accuracy · Scan Failure Rate · Manual Review Rate · Processing Time · Item Difficulty · Discrimination Index · Distractor Effectiveness · Agreement With Teacher Grading</p>
+<p class="rule">OMR (R2) và item analysis (R3) đều có giá trị nghiên cứu. Nên bỏ AI-assisted grading khỏi đợt này.</p>
+</div></details>
+
+<details class="module" id="nam"><summary><span class="module-code">05</span><div><span class="module-title">Nam — Tổng hợp, chốt scope & vấn đề xuyên suốt</span><span class="module-description">Không nhận research domain riêng. Chuyển 4 báo cáo thành competitor matrix, scope và Functional Requirements.</span></div><span class="badges"><span class="badge pending">Cần chia bớt</span></span><span class="chevron">+</span></summary><div class="module-content">
+<h4>Tổng hợp</h4><ul><li>Tổng hợp 4 research report, loại bỏ feature trùng</li><li>Xác định baseline feature và feature có research value</li><li>Lập competitor matrix chung</li><li>Phân loại feature: MVP · Advanced · Research · Stretch</li><li>Tổng hợp open questions, chuẩn bị nội dung họp với giảng viên</li><li>Chốt scope sau feedback; chuyển kết quả thành Functional Requirements</li><li>Cập nhật architecture và proposal</li></ul>
+<h4>Vấn đề xuyên suốt</h4><p>RBAC · permissions · audit trail · privacy · explainability · human-in-the-loop · reliability · security · scalability · NFR</p>
+<p class="rule">Nhóm vấn đề xuyên suốt tương ứng miền thứ 5 “Minh bạch & kiểm soát” trong sổ tay. Nên để từng thành viên ghi đầu vào cho phần này.</p>
+</div></details>
+</section>
+
+<section id="deliverables">
+<div class="section-title"><h2>Đầu ra cho mỗi thành viên</h2><span class="source">Brief §5–7</span></div>
+<p>Mỗi người nộp một research report theo cùng template.</p>
+<div class="table-wrap"><table><thead><tr><th>Yêu cầu</th><th>Mức tối thiểu</th></tr></thead><tbody>
+<tr><td>Nguồn nghiên cứu</td><td>≥ 5 sản phẩm / paper / official documentation; ghi rõ nguồn.</td></tr>
+<tr><td>Feature inventory</td><td>≥ 10 feature, kèm sản phẩm đã có, giá trị người dùng, giá trị nghiên cứu, độ phức tạp.</td></tr>
+<tr><td>Baseline & gap</td><td>Chỉ ra feature đã là baseline và limitation / research gap.</td></tr>
+<tr><td>Top 3</td><td>3 feature / hướng đáng giữ, kèm research contribution, metric và scope gợi ý.</td></tr>
+<tr><td>Open questions</td><td>Vấn đề chưa kết luận, cần hỏi nhóm hoặc giảng viên.</td></tr>
+</tbody></table></div>
+<div class="assignment"><strong>Một feature chỉ đáng thành research contribution khi trả lời được cả 7 câu</strong><p>Vấn đề cụ thể là gì? · Giải pháp hiện có làm thế nào? · Hạn chế ở đâu? · Nhóm đề xuất khác gì? · Có dữ liệu không? · Có metric không? · Có khả thi trong thời gian đồ án không?</p></div>
+<details class="template" id="template"><summary>Research template đầy đủ <span>+</span></summary><pre># RESEARCH REPORT
+
+Member:
+Research Domain:
+Date:
+
+## 1. Research Objective
+Domain này giải quyết vấn đề gì?
+Research Questions:
+- RQ1:
+- RQ2:
+- RQ3:
+
+## 2. Existing Solutions
+| Product / Paper | Relevant Feature | How It Works | Strength | Limitation | Source |
+|---|---|---|---|---|---|
+Tối thiểu 5 nguồn. Ưu tiên: official documentation → research paper
+→ technical documentation → product documentation.
+
+## 3. Feature Inventory
+| Feature | Existing Products | User Value | Research Value | Complexity |
+|---|---|---|---|---|
+Tối thiểu 10 feature.
+
+## 4. Feature Deep Dive
+### Feature Name
+Problem:
+Target User:
+Existing Solution:
+Existing Limitation:
+Proposed Direction:
+Workflow:
+Required Data:
+Output:
+AI Required: No AI / AI Assisted / AI Core
+Technical Complexity: Low / Medium / High
+Research Value: Low / Medium / High
+User Value: Low / Medium / High
+MVP Feasibility: MVP / Advanced / Research / Stretch / Should Not Build
+Evaluation Metrics:
+Risks:
+References:
+
+## 5. Gap Analysis
+| Existing Capability | Market Baseline? | Limitation / Gap | Opportunity |
+|---|---|---|---|
+Nếu thị trường đã có feature này thì đồ án còn nghiên cứu được điều gì?
+
+## 6. Top 3 Recommendations
+### Recommendation 1..3
+Feature:
+Reason:
+Research Contribution:
+Evaluation Metric:
+Suggested Scope:
+
+## 7. Open Questions
+- Q1:
+- Q2:
+- Q3:
+
+## 8. Conclusion
+- thị trường hiện tại đang làm gì
+- đâu là baseline
+- đâu là research gap
+- feature nào nên giữ
+- feature nào nên bỏ hoặc để Stretch
+
+## 9. References
+[1] Title: / URL: / Accessed:</pre><p>Bản Markdown để sao chép: <a href="brief.md">brief.md</a>, mục 6.</p></details>
+</section>
+
+<section id="assessment">
+<div class="section-title"><h2>Brief có phù hợp cho đồ án không?</h2><span class="source">Đánh giá đề xuất</span></div>
+<p>Đối chiếu brief với hướng ưu tiên R1–R3 trong sổ tay v0.2 và thời gian của một đồ án 5 người. Đây là nhận định để nhóm thảo luận, chưa phải quyết định cuối.</p>
+<div class="notice"><span>ⓘ</span><div><strong>Kết luận: chia bốn miền theo vòng đời đánh giá là hợp lý, nhưng cần điều chỉnh ba điểm trước khi giao.</strong><p>(1) Duy đang nhận ba nhóm việc, trong đó có Personalization (R1, hướng ưu tiên số 1). (2) Năm chủ đề xuất hiện ở nhiều người mà chưa có ranh giới. (3) Brief chưa có mốc thời gian và điểm bàn giao dữ liệu giữa các miền.</p></div></div>
+<div class="table-wrap"><table class="member-summary"><thead><tr><th>Thành viên</th><th>Đánh giá</th><th>Khối lượng</th><th>Giá trị nghiên cứu</th><th>Nhận xét</th></tr></thead><tbody>
+<tr><td><strong>Bảo</strong><small>Question Bank</small></td><td><span class="badge pending">Cần bổ sung</span></td><td>Vừa</td><td>Thấp – TB</td><td>Question bank, metadata, workflow duyệt và versioning là baseline (Moodle, Canvas, TAO đều có). Cần để chốt data model nhưng ít đóng góp nghiên cứu. QuestionWell là công cụ sinh câu hỏi bằng AI, hợp với miền của Duy hơn.</td></tr>
+<tr><td><strong>Lâm</strong><small>Blueprint & sinh đề</small></td><td><span class="badge mvp">Phù hợp</span></td><td>Vừa</td><td>Cao</td><td>Chọn câu theo ràng buộc có metric định lượng rõ và dữ liệu tự tạo được. Gắn với R3 qua kiểm tra blueprint thiếu câu. Autosave, reconnect và auto submit là kỹ thuật baseline, nên giới hạn thời gian.</td></tr>
+<tr><td><strong>Duy</strong><small>AI & Personalization</small></td><td><span class="badge risk">Quá tải</span></td><td>Rất cao</td><td>Cao</td><td>RAG, Question Intelligence và Personalization đều là những hướng nghiên cứu riêng. R1 đang đứng cuối danh sách việc của một người nên dễ bị làm nông.</td></tr>
+<tr><td><strong>Hộp</strong><small>OMR & item analysis</small></td><td><span class="badge pending">Cần thu hẹp</span></td><td>Cao</td><td>Cao</td><td>OMR (R2) và item analysis (R3) đều đáng giữ. AI-assisted grading đang ở mức Mở rộng trong sổ tay, nên bỏ khỏi đợt research này.</td></tr>
+<tr><td><strong>Nam</strong><small>Tổng hợp</small></td><td><span class="badge pending">Cần chia bớt</span></td><td>Cao</td><td>—</td><td>Vừa tổng hợp 4 báo cáo vừa theo dõi 10 vấn đề xuyên suốt, tương đương một miền riêng (“Minh bạch & kiểm soát”).</td></tr>
+</tbody></table></div>
+<p class="caption">Giá trị nghiên cứu xét theo khả năng tạo research contribution có metric, không phải mức quan trọng với sản phẩm. Question bank vẫn là nền tảng bắt buộc của MVP.</p>
+</section>
+
+<section id="overlaps">
+<div class="section-title"><h2>Chồng lấn cần phân định</h2><span class="source">Đề xuất ranh giới</span></div>
+<p>Brief đặt mục tiêu hạn chế overlap, nhưng năm chủ đề dưới đây đang xuất hiện ở nhiều miền. Gợi ý chia theo câu hỏi “ai định nghĩa dữ liệu, ai tính toán, ai dùng”.</p>
+<div class="table-wrap"><table><thead><tr><th>Chủ đề</th><th>Đang có ở</th><th>Ranh giới đề xuất</th></tr></thead><tbody>
+<tr><td><strong>Duplicate detection</strong></td><td>Bảo, Duy</td><td>Duy: phương pháp phát hiện (embedding, ngưỡng tương đồng). Bảo: workflow khi phát hiện trùng (gộp, đánh dấu, giữ lịch sử).</td></tr>
+<tr><td><strong>Document processing</strong></td><td>Bảo, Duy</td><td>Bảo: quản lý file, định dạng hỗ trợ, gắn topic / LO. Duy: tách nội dung, chunking, embedding cho RAG.</td></tr>
+<tr><td><strong>Độ khó</strong></td><td>Bảo, Duy, Hộp</td><td>Bảo: nhãn giáo viên gán. Duy: độ khó dự đoán trước khi thi. Hộp: độ khó thực nghiệm sau khi thi. Sổ tay đã yêu cầu lưu riêng các giá trị này.</td></tr>
+<tr><td><strong>Question Health</strong></td><td>Duy, Hộp</td><td>Chia theo thời điểm. Trước khi thi (Duy): câu mơ hồ, sai Bloom, phương án nhiễu yếu. Sau khi thi (Hộp): p-value, discrimination, distractor effectiveness từ dữ liệu làm bài.</td></tr>
+<tr><td><strong>Topic / LO performance</strong></td><td>Hộp, Duy</td><td>Hộp: thống kê theo lớp. Người phụ trách Personalization: hồ sơ theo từng sinh viên. Cả hai dùng chung định nghĩa topic / LO do Bảo chốt.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="adjustments">
+<div class="section-title"><h2>Đề xuất điều chỉnh phân công</h2><span class="source">Cần nhóm chốt</span></div>
+<p>Mục tiêu: mỗi hướng ưu tiên R1–R3 có đúng một người chịu trách nhiệm, và không ai ôm quá hai nhóm việc.</p>
+<div class="table-wrap"><table><thead><tr><th>Thành viên</th><th>Brief hiện tại</th><th>Đề xuất</th></tr></thead><tbody>
+<tr><td><strong>Bảo</strong></td><td>Question Bank & Learning Content</td><td>Giữ Question Bank ở mức baseline (data model, lifecycle, import). <b>Nhận thêm Personalization (R1)</b>: mastery theo chủ đề, phân phối bài, giải thích, đánh giá lại. Personalization dựng trực tiếp trên metadata topic / LO / độ khó mà Bảo định nghĩa.</td></tr>
+<tr><td><strong>Duy</strong></td><td>AI Generation + Question Intelligence + Personalization</td><td>Tập trung AI Generation (RAG có trích dẫn) và Question Intelligence trước khi thi. Chuyển Personalization sang Bảo. Nhận thêm QuestionWell vào nguồn tham khảo.</td></tr>
+<tr><td><strong>Lâm</strong></td><td>Exam Blueprint & Exam Generation</td><td>Giữ. Thêm kiểm tra blueprint không khả thi (báo thiếu câu thay vì âm thầm phá ràng buộc). Tổ chức thi chỉ khảo sát ở mức baseline.</td></tr>
+<tr><td><strong>Hộp</strong></td><td>Paper/OMR, Grading & Item Analysis</td><td>Giữ OMR và item analysis. Bỏ AI-assisted grading; rubric, regrade và grade history chỉ ghi nhận workflow baseline.</td></tr>
+<tr><td><strong>Nam</strong></td><td>Tổng hợp + vấn đề xuyên suốt</td><td>Giữ. Thêm hai trường “Quyền thao tác” và “Bằng chứng cần lưu” vào Feature Deep Dive để mỗi thành viên cung cấp đầu vào cho ma trận quyền và audit.</td></tr>
+</tbody></table></div>
+<div class="boundary"><h3>Phương án thay thế</h3><p>Nếu muốn giữ Bảo ở Question Bank: chuyển Question Intelligence sang Bảo (vốn gắn với chất lượng câu hỏi), để Duy tập trung RAG và Personalization. Cách này vẫn giảm tải cho Duy nhưng R1 và RAG cùng một người, nên cần chọn độ sâu cho RAG thấp hơn.</p></div>
+<h2 class="small-heading">Bổ sung cho brief</h2>
+<div class="scope-block"><h3><span class="badge pending">Thiếu</span> Mốc thời gian và checkpoint</h3><p>Brief chưa có deadline. Gợi ý một checkpoint giữa chừng (danh sách nguồn + feature inventory) để Nam phát hiện chồng lấn sớm, trước hạn nộp report đầy đủ.</p></div>
+<div class="scope-block"><h3><span class="badge pending">Thiếu</span> Điểm bàn giao giữa các miền</h3><p>Mỗi miền ghi rõ dữ liệu vào / ra, như sổ tay đã yêu cầu. Ví dụ: Bảo → Lâm: metadata câu hỏi; Lâm → Hộp: ánh xạ mã đề và phiên bản; Hộp → Personalization: kết quả đã xác nhận từ bài giấy và online.</p></div>
+<div class="scope-block"><h3><span class="badge advanced">Thống nhất</span> Nhãn phân loại scope</h3><p>Brief dùng MVP / Advanced / Research / Stretch / Should Not Build; sổ tay dùng MVP / Nâng cao / Chọn lọc / Mở rộng. Đề xuất ánh xạ: Advanced = Nâng cao, Research = Chọn lọc, Stretch = Mở rộng, Should Not Build = Ngoài phạm vi.</p></div>
+<div class="scope-block"><h3><span class="badge advanced">Nâng yêu cầu</span> Nguồn học thuật</h3><p>Với các miền nhắm research contribution (R1–R3, sinh đề, RAG), trong 5 nguồn nên có ít nhất 1–2 paper, không chỉ tài liệu sản phẩm. Hội đồng thường hỏi đóng góp so với nghiên cứu đã có.</p></div>
+</section>
+
+<section id="metrics">
+<div class="section-title"><h2>Metric có đo được trong thời gian đồ án không?</h2><span class="source">Đánh giá khả thi</span></div>
+<p>Metric chỉ có giá trị khi nhóm có dữ liệu để đo. Nhóm chưa có lịch sử làm bài thật, nên các metric cần dữ liệu thực nghiệm dài hạn có rủi ro cao nhất.</p>
+<div class="table-wrap"><table><thead><tr><th>Metric</th><th>Dữ liệu cần</th><th>Khả thi</th></tr></thead><tbody>
+<tr><td><strong>Topic / Difficulty / Bloom Difference, LO Coverage, Time Difference</strong><small>Lâm</small></td><td>Ngân hàng câu hỏi có metadata; nhóm tự tạo được.</td><td><span class="badge mvp">Cao</span> Tính ngay khi sinh đề. Lưu ý: chỉ đo tương đương theo nhãn, chưa phải tương đương thực nghiệm (cần IRT / equating, đang ở Mở rộng).</td></tr>
+<tr><td><strong>OMR Accuracy, Scan Failure, Manual Review Rate, Processing Time</strong><small>Hộp</small></td><td>Bộ phiếu tự in và tô theo kịch bản: lệch, mờ, thiếu sáng, tô / tẩy khác nhau.</td><td><span class="badge mvp">Cao</span> Nhóm chủ động tạo dữ liệu; cần chốt số phiếu và kịch bản trước khi đo.</td></tr>
+<tr><td><strong>Agreement With Teacher Grading</strong><small>Hộp</small></td><td>Chấm song song máy và giảng viên.</td><td><span class="badge mvp">Cao</span> với trắc nghiệm; <span class="badge risk">Thấp</span> với chấm tự luận bằng AI.</td></tr>
+<tr><td><strong>Grounding Accuracy, Factual Correctness, Relevance</strong><small>Duy</small></td><td>Bộ câu hỏi sinh ra được người chấm nhãn theo tiêu chí thống nhất.</td><td><span class="badge pending">Trung bình</span> Cần bộ đánh giá gán nhãn thủ công; framework như RAGAS hỗ trợ một phần.</td></tr>
+<tr><td><strong>Bloom Accuracy, Teacher Agreement</strong><small>Duy</small></td><td>Câu hỏi có nhãn Bloom do giảng viên gán.</td><td><span class="badge pending">Trung bình</span> Phụ thuộc thời gian giảng viên gán nhãn.</td></tr>
+<tr><td><strong>Item Difficulty, Discrimination, Distractor Effectiveness</strong><small>Hộp</small></td><td>Kết quả làm bài thật.</td><td><span class="badge pending">Trung bình</span> Lớp 30–60 sinh viên cho chỉ số dao động; báo cáo kèm số bài và đặt ngưỡng tối thiểu trước khi cảnh báo.</td></tr>
+<tr><td><strong>Difficulty Accuracy (dự đoán)</strong><small>Duy</small></td><td>Độ khó thực nghiệm từ nhiều lượt làm bài.</td><td><span class="badge risk">Thấp</span> Chưa có dữ liệu lịch sử để huấn luyện / đối chiếu; nên xếp Research hoặc Stretch.</td></tr>
+<tr><td><strong>Recommendation Effectiveness</strong><small>Personalization</small></td><td>Pilot nhiều tuần, nhóm đối chứng, bài kiểm tra chung.</td><td><span class="badge risk">Thấp – TB</span> Sổ tay ghi “chưa kết luận hiệu quả trước pilot”. Có thể bổ sung bằng mô phỏng và đánh giá độ phù hợp của giảng viên.</td></tr>
+</tbody></table></div>
+<p class="caption">Mức khả thi là ước lượng ban đầu; từng thành viên cần xác nhận lại trong mục Risks của report.</p>
+</section>
+
+<section id="next">
+<div class="section-title"><h2>Sau khi research xong</h2><span class="source">Brief §8</span></div>
+<p>Nhóm tổ chức một buổi tổng hợp để tạo:</p>
+<ol class="checklist">
+<li>Competitor Matrix</li><li>Final Feature List</li><li>MVP Scope</li><li>Advanced Scope</li><li>Research Contributions</li><li>Stretch Features</li><li>Open Questions cho giảng viên</li><li>Functional Requirements</li><li>Architecture Direction</li><li>Evaluation Plan</li>
+</ol>
+<div class="assignment"><strong>Mục tiêu cuối của giai đoạn</strong><p>Chuyển từ “nhóm muốn xây một hệ thống có nhiều feature” sang “nhóm đã khảo sát giải pháp hiện tại, xác định baseline, tìm được khoảng trống phù hợp và có phương pháp đánh giá rõ ràng cho các research feature được chọn”.</p></div>
+</section>
+
+<footer><span>Intelligent Assessment Platform · Phân công research</span><a href="../index.html">← Về Sổ tay tính năng</a><p>v0.1 · Cập nhật 28/09/2026. Phần phân công lấy từ brief gốc; phần đánh giá và đề xuất điều chỉnh là nhận định để nhóm thảo luận, chưa được chốt. <a href="brief.md">Xem brief gốc</a>.</p></footer>
+</main><aside class="right-rail"><div class="rail-sticky"><p>Trên trang này</p><a href="#overview">Tổng quan</a><a href="#goals">Mục tiêu chung</a><a href="#bao">Bảo</a><a href="#lam">Lâm</a><a href="#duy">Duy</a><a href="#hop">Hộp</a><a href="#nam">Nam</a><a href="#deliverables">Đầu ra & template</a><a href="#assessment">Mức độ phù hợp</a><a href="#overlaps">Chồng lấn</a><a href="#adjustments">Đề xuất điều chỉnh</a><a href="#metrics">Metric & dữ liệu</a><a href="#next">Sau research</a><div class="legend"><span>Đánh giá</span><p><i class="dot mvp-dot"></i>Phù hợp</p><p><i class="dot" style="background:#c49b40"></i>Cần điều chỉnh</p><p><i class="dot" style="background:#b85c5c"></i>Quá tải / rủi ro cao</p><small>Đề xuất để nhóm thảo luận.</small></div></div></aside></div>
+</div><script src="../app.js"></script>
+</body>
+</html>
