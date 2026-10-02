@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Đề xuất nghiên cứu Intelligent Assessment Platform, tổng hợp bốn báo cáo về ngân hàng câu hỏi, cá nhân hóa, sinh đề, AI và OMR theo phân công của nhóm.">
+  <meta name="theme-color" content="#254d72">
+  <title>Proposal tổng hợp · Intelligent Assessment Platform</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23254d72'/%3E%3Ctext x='8' y='24' font-family='Georgia' font-size='25' fill='white'%3Ei%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#report">Đến nội dung báo cáo</a>
+<header class="topbar">
+  <a class="brand" href="../"><span class="mark" aria-hidden="true">ia</span><span class="brand-text">Intelligent Assessment</span></a>
+  <div class="actions"><a href="../">Sổ tay dự án</a><a href="../research-assignment/">Phân công nghiên cứu</a><button class="print-button" type="button">In báo cáo</button><button class="menu-button" type="button" aria-expanded="false" aria-controls="contents">Mục lục</button></div>
+</header>
+<div class="reading-progress" aria-hidden="true"></div>
+<div class="shell">
+  <aside class="sidebar" id="contents">
+    <p class="nav-label">Đề xuất nghiên cứu</p>
+    <nav class="toc" aria-label="Mục lục báo cáo">
+      <a href="#abstract"><span>00</span>Tóm tắt</a>
+      <a href="#context"><span>01</span>Bối cảnh và mục tiêu</a>
+      <a href="#synthesis"><span>02</span>Cơ sở tổng hợp</a>
+      <a href="#related"><span>03</span>Giải pháp liên quan</a>
+      <a href="#scope"><span>04</span>Phạm vi đề xuất</a>
+      <a href="#methods"><span>05</span>Phương pháp nghiên cứu</a>
+      <a href="#architecture"><span>06</span>Kiến trúc và dữ liệu</a>
+      <a href="#requirements"><span>07</span>Yêu cầu hệ thống</a>
+      <a href="#evaluation"><span>08</span>Kế hoạch thực nghiệm</a>
+      <a href="#implementation"><span>09</span>Tổ chức thực hiện</a>
+      <a href="#limitations"><span>10</span>Giới hạn và quyết định</a>
+      <a href="#contributions"><span>11</span>Đóng góp dự kiến</a>
+      <a href="#references"><span>12</span>Tài liệu tham khảo</a>
+    </nav>
+    <div class="sidebar-note">Bản tổng hợp 1.0<br>Ngày 02 tháng 10 năm 2026<br>Cơ sở: 4 báo cáo thành viên và tài liệu phân công trong kho mã nguồn.<a href="#references">Đối chiếu tài liệu nguồn</a></div>
+  </aside>
+
+  <main class="report" id="report">
+    <header class="document-header">
+      <div class="eyebrow"><span>Đồ án tốt nghiệp · Đề xuất nghiên cứu</span><span>IAP / 01 · 2026</span></div>
+      <p class="document-type">Proposal tổng hợp</p>
+      <h1>Nền tảng hỗ trợ xây dựng, tổ chức và phân tích đánh giá học tập thông minh</h1>
+      <p class="subtitle">Tích hợp ngân hàng câu hỏi có truy vết, sinh đề theo ràng buộc, đánh giá trên giấy và trực tuyến, cùng luyện tập cá nhân hóa có giải thích.</p>
+      <dl class="metadata">
+        <div><dt>Tên đề tài</dt><dd>Intelligent Assessment Platform</dd></div>
+        <div><dt>Cơ sở nghiên cứu</dt><dd>04 báo cáo · 28–30/09/2026</dd></div>
+        <div><dt>Trạng thái</dt><dd>Đề xuất để thẩm định</dd></div>
+      </dl>
+    </header>
+
+    <section class="abstract" id="abstract" aria-labelledby="abstract-title">
+      <h2 id="abstract-title">Tóm tắt</h2>
+      <p>Đề tài đề xuất một nền tảng hỗ trợ giảng viên quản lý toàn bộ vòng đời đánh giá học tập trên cơ sở dữ liệu có nguồn gốc, phiên bản và trạng thái xác nhận rõ ràng. Hệ thống kết hợp ngân hàng câu hỏi, hỗ trợ biên soạn bằng trí tuệ nhân tạo, sinh đề theo ma trận ràng buộc, thu nhận bài làm trực tuyến và phiếu giấy, chấm điểm, phân tích câu hỏi và đề xuất luyện tập theo từng chủ đề.</p>
+      <p>Tổng hợp bốn báo cáo cho thấy các chức năng riêng lẻ đã có tiền lệ trong sản phẩm hoặc nghiên cứu. Vì vậy, đề tài tập trung kiểm chứng chất lượng của các quyết định trong quy trình tích hợp: tính phù hợp của bộ luyện tập, mức sai sót và công sức kiểm tra phiếu, độ lệch giữa các mã đề, độ bám nguồn của câu hỏi AI và hiệu quả kiểm duyệt của giảng viên. Thiết kế thực nghiệm sử dụng phương pháp đối chứng, dữ liệu có kiểm soát và đánh giá chuyên gia; kết luận về hiệu quả học tập chỉ được xem xét khi có thử nghiệm với người học.</p>
+      <div class="keywords"><strong>Từ khóa:</strong> đánh giá học tập; ngân hàng câu hỏi; cá nhân hóa; sinh đề theo ràng buộc; nhận diện ô đã tô; truy vết dữ liệu.</div>
+    </section>
+
+    <section id="context">
+      <h2><span class="number">01 / Đặt vấn đề</span>Bối cảnh và mục tiêu</h2>
+      <p>Trong phạm vi khảo sát của nhóm, các nền tảng giáo dục đã hỗ trợ tạo câu hỏi, tổ chức kiểm tra, chấm điểm và báo cáo kết quả. Tuy nhiên, việc kết nối các thành phần này đặt ra yêu cầu về tính nhất quán: câu hỏi được sửa phải giữ được phiên bản từng sử dụng; mã đề cần ánh xạ đúng câu và phương án gốc; kết quả nhận diện chưa được xác nhận không được trở thành căn cứ đánh giá năng lực. Một hệ thống có nhiều chức năng vẫn có thể tạo quyết định thiếu tin cậy nếu các điều kiện dữ liệu này chưa được bảo đảm. <a class="citation" href="#ref-bao">[1]</a> <a class="citation" href="#ref-hop">[4]</a></p>
+      <p><strong>Mục tiêu tổng quát</strong> là thiết kế và đánh giá một nguyên mẫu tích hợp có khả năng giải trình từ tài liệu học phần đến câu hỏi, đề thi, kết quả và bộ luyện tập tiếp theo. Giảng viên là người phê duyệt nội dung và quyết định chuyên môn; trợ giảng thực hiện công việc được phân quyền; sinh viên tiếp cận bài làm, kết quả và lý do đề xuất phù hợp với quyền của mình.</p>
+      <ol>
+        <li>Xây dựng nền tảng dữ liệu chung cho học phần, chủ đề, chuẩn đầu ra, câu hỏi, mã đề và kết quả có phiên bản.</li>
+        <li>Đề xuất bộ luyện tập dựa trên bằng chứng đã xác nhận, có giải thích, xử lý dữ liệu thưa và cho phép giảng viên điều chỉnh.</li>
+        <li>Đánh giá quy trình nhận diện phiếu giấy có kiểm tra chất lượng và xác nhận thủ công đối với trường hợp không chắc chắn.</li>
+        <li>Kiểm chứng sinh đề theo ràng buộc và hỗ trợ AI trước kỳ thi bằng các thí nghiệm có phương pháp đối chứng, dữ liệu và chỉ số xác định trước.</li>
+      </ol>
+      <p>Thiết kế dữ liệu hướng tới nhiều học phần; thực nghiệm ban đầu giới hạn trong một học phần, một ngôn ngữ chính và câu trắc nghiệm một đáp án đúng. Học phần và ngôn ngữ sẽ được xác định cùng giảng viên trước khi xây dựng tập đánh giá. Kết quả trên phạm vi này chưa đủ để suy rộng cho mọi lĩnh vực.</p>
+    </section>
+
+    <section id="synthesis">
+      <h2><span class="number">02 / Cơ sở tổng hợp</span>Đối chiếu nghiên cứu với phân công</h2>
+      <p>Bản tổng hợp sử dụng báo cáo của Nguyễn Quốc Bảo, Trương Hoàng Lâm, Nguyễn Trường Duy và Nguyễn Văn Hộp; đối chiếu với brief, trang phân công và ghi chú định hướng v0.2 trong kho mã nguồn. Phương pháp gồm trích xuất kết quả khảo sát, hợp nhất chức năng trùng lặp, xác định ranh giới dữ liệu và lựa chọn phạm vi có thể đánh giá. Các kết quả dưới đây là tổng hợp tài liệu và đề xuất thiết kế, chưa phải kết quả thực nghiệm của nguyên mẫu. <a class="citation" href="#ref-project">[5]</a></p>
+      <div class="table-wrap" role="region" aria-label="Bảng đối chiếu phân công" tabindex="0"><table class="wide">
+        <caption>Bảng 1. Đối chiếu phân công ban đầu, điều chỉnh trong kho mã nguồn và nội dung báo cáo.</caption>
+        <thead><tr><th>Thành viên</th><th>Phân công và báo cáo thực tế</th><th>Nội dung đưa vào proposal</th></tr></thead>
+        <tbody>
+          <tr><td>Nguyễn Quốc Bảo<small>Báo cáo [1]</small></td><td>Brief giao ngân hàng câu hỏi và tài liệu. Báo cáo nhận thêm cá nhân hóa, phù hợp phương án điều chỉnh trong kho mã nguồn.</td><td>Phiên bản, nguồn gốc, chủ đề và chuẩn đầu ra; hồ sơ năng lực; chọn bộ luyện tập có ràng buộc, giải thích và đánh giá lại.</td></tr>
+          <tr><td>Trương Hoàng Lâm<small>Báo cáo [2]</small></td><td>Ma trận đề và sinh đề. Báo cáo tập trung chọn câu, nhiều mã đề và giải thích trường hợp không khả thi.</td><td>Sinh đề theo ràng buộc; kiểm tra độ lệch theo siêu dữ liệu; lưu ánh xạ mã đề. Tổ chức thi trực tuyến là nền tảng kỹ thuật cần phân công khi triển khai.</td></tr>
+          <tr><td>Nguyễn Trường Duy<small>Báo cáo [3]</small></td><td>Brief gồm AI và cá nhân hóa. Báo cáo thu hẹp vào sinh câu hỏi và kiểm định trước thi, phù hợp đề xuất chuyển cá nhân hóa cho Bảo.</td><td>Sinh câu hỏi có bằng chứng nguồn; cảnh báo theo tiêu chí; kiểm duyệt có ghi nhận chỉnh sửa và quyết định của giảng viên.</td></tr>
+          <tr><td>Nguyễn Văn Hộp<small>Báo cáo [4]</small></td><td>Phiếu giấy, nhận diện ô đã tô, chấm điểm và phân tích câu hỏi; thu hẹp OMR về mẫu cố định.</td><td>Kiểm tra phiếu không chắc chắn; chuẩn hóa đáp án; phiên bản kết quả; thống kê có cỡ mẫu và ngữ cảnh.</td></tr>
+          <tr><td>Nam<small>Vai trò trong kho mã nguồn</small></td><td>Tổng hợp nghiên cứu, phối hợp chốt phạm vi và yêu cầu xuyên suốt.</td><td>Kiến trúc tích hợp, ma trận quyền, bằng chứng kiểm thử, quản lý dữ liệu và điều phối thẩm định với giảng viên.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Ranh giới tổng hợp được đề xuất như sau: Bảo quản lý tài liệu, định danh và vòng đời câu hỏi; Duy xử lý nội dung cho truy xuất và kiểm định trước thi; Lâm sử dụng phiên bản đã duyệt để sinh đề; Hộp chuẩn hóa bài làm và kết quả. Phân tích thống kê theo lớp thuộc miền của Hộp, còn ước lượng năng lực từng sinh viên và chọn bài luyện tập thuộc miền của Bảo.</p>
+      <p>Nhãn độ khó do giảng viên xác nhận, dự đoán của AI và tỷ lệ đúng quan sát được là ba loại dữ liệu riêng. Cảnh báo trùng ngữ nghĩa do Duy nghiên cứu; thao tác xử lý câu trùng và bảo toàn lịch sử thuộc ngân hàng câu hỏi. Phân công này phản ánh các báo cáo đã nộp và vẫn cần được nhóm xác nhận khi chuyển thành kế hoạch triển khai.</p>
+    </section>
+
+    <section id="related">
+      <h2><span class="number">03 / Tổng quan liên quan</span>Giải pháp hiện có và khoảng trống đánh giá</h2>
+      <p>Ma trận sau tổng hợp bằng chứng được các thành viên dẫn trong báo cáo. Mục tiêu là xác định chức năng nền tảng và bài toán cần kiểm chứng. Việc một tài liệu không mô tả một chức năng được hiểu là chưa đủ bằng chứng, không phải khẳng định sản phẩm không hỗ trợ chức năng đó.</p>
+      <div class="table-wrap" role="region" aria-label="Ma trận giải pháp liên quan" tabindex="0"><table class="wide">
+        <caption>Bảng 2. Ma trận giải pháp liên quan theo phạm vi khảo sát của nhóm.</caption>
+        <thead><tr><th>Giải pháp / nhóm nghiên cứu</th><th>Năng lực đã được ghi nhận</th><th>Hàm ý đối với đề tài</th></tr></thead>
+        <tbody>
+          <tr><td>Moodle, Canvas, TAO<small>[1], [2], [4]</small></td><td>Ngân hàng câu hỏi, tái sử dụng, cấu hình bài kiểm tra, tổ chức thi và báo cáo; mức hỗ trợ khác nhau theo sản phẩm.</td><td>Quản lý câu hỏi và chọn ngẫu nhiên là chức năng nền tảng. Cần đánh giá chất lượng dữ liệu và độ lệch nhiều mã đề theo cùng bộ tiêu chí.</td></tr>
+          <tr><td>QuestionWell, Wayground, Kahoot<small>[3]</small></td><td>Sinh câu hỏi từ nội dung và cho phép giảng viên chỉnh sửa; QuestionWell được báo cáo có truy ngược về đoạn nguồn.</td><td>Sinh câu hỏi bằng AI đã có tiền lệ. Đề tài cần đo độ bám nguồn, độ đúng trích dẫn và lỗi còn sót sau kiểm duyệt.</td></tr>
+          <tr><td>ZipGrade, Gradescope, Azota<small>[4]</small></td><td>Nhận diện phiếu, hiệu chỉnh đáp án và xử lý nhiều mã đề. ZipGrade được khảo sát có cả bài giấy và trực tuyến.</td><td>Tích hợp hai hình thức không tự tạo tính mới. Cần đo lỗi tự chấp nhận, thời gian kiểm tra và tính nhất quán của kết quả.</td></tr>
+          <tr><td>ASSISTments và nghiên cứu gợi ý bài tập<small>[1], [6], [7]</small></td><td>Theo dõi tương tác theo kỹ năng, phản hồi và các phương pháp đề xuất bài tập dựa trên trạng thái học tập.</td><td>Ưu tiên mô hình có thể giải thích; kiểm tra thiếu dữ liệu, lặp câu và độ bao phủ. Chất lượng gợi ý ngoại tuyến chưa chứng minh tiến bộ học tập.</td></tr>
+          <tr><td>Nghiên cứu Automated Test Assembly<small>[2], [8]</small></td><td>Mô hình hóa chọn câu và tạo nhiều đề bằng tối ưu tổ hợp, ràng buộc nội dung và kiểm tra tính khả thi.</td><td>Thuật toán tối ưu đã có cơ sở nghiên cứu. Phạm vi phù hợp là nguyên mẫu có đối chứng và báo cáo sai lệch, chưa bao gồm hiệu chuẩn tâm trắc.</td></tr>
+          <tr><td>Nghiên cứu RAG và kiểm định MCQ<small>[3], [9]</small></td><td>Truy xuất tài liệu hỗ trợ sinh câu hỏi; đánh giá chất lượng theo nhiều tiêu chí, thường cần nhãn chuyên gia.</td><td>Cần tách chất lượng đầu ra AI khỏi hiệu quả sử dụng của giảng viên; đo cả cảnh báo sai và vấn đề bị bỏ sót.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Khoảng trống phù hợp với đồ án là đánh giá một quy trình tích hợp có thể truy vết trong điều kiện dữ liệu và nguồn lực xác định. Tính mới học thuật của từng thuật toán chưa được xác lập bởi bốn báo cáo này; đóng góp sẽ được giới hạn theo kết quả đối chứng và phạm vi thực nghiệm thực tế.</p>
+    </section>
+
+    <section id="scope">
+      <h2><span class="number">04 / Phạm vi</span>Phạm vi sản phẩm và ưu tiên nghiên cứu</h2>
+      <p>Phạm vi ban đầu gồm một học phần thí điểm, câu trắc nghiệm một đáp án đúng, tài liệu PDF hoặc DOCX có văn bản trích xuất được và một mẫu phiếu A4 có cấu trúc. Ngân hàng câu hỏi và dữ liệu gán nhãn được chuẩn bị trước thí nghiệm; quy mô ở mục 8 là kế hoạch đề xuất, chưa phải dữ liệu đã thu thập.</p>
+      <div class="table-wrap" role="region" aria-label="Phân loại phạm vi chức năng" tabindex="0"><table class="wide">
+        <caption>Bảng 3. Danh mục chức năng hợp nhất và mức ưu tiên.</caption>
+        <thead><tr><th>Mức phạm vi</th><th>Chức năng đề xuất</th><th>Điều kiện hoàn thành</th></tr></thead>
+        <tbody>
+          <tr><td>Tối thiểu khả dụng<small>MVP</small></td><td>Học phần, lớp, quyền; tài liệu và chuẩn đầu ra; nhập, tìm kiếm, kiểm duyệt và phiên bản câu hỏi; ma trận đề, xem trước và khóa mã đề; làm bài trực tuyến có lưu đáp án và biên nhận; chấm trắc nghiệm, công bố điểm, lịch sử sửa và thống kê mô tả.</td><td>Hoàn thành quy trình đầu cuối với ánh xạ chính xác, kết quả tái dựng được và kiểm thử quyền theo lớp.</td></tr>
+          <tr><td>Nâng cao<small>Advanced</small></td><td>OMR theo mẫu và hàng đợi kiểm tra; nhiều mã đề; luyện tập theo hồ sơ chủ đề; phân tích độ phân biệt và phương án nhiễu; phúc khảo; phát hiện trùng ngữ nghĩa khi đủ thời gian.</td><td>Tích hợp trên dữ liệu có phiên bản, không làm suy giảm điều kiện bất biến của MVP.</td></tr>
+          <tr><td>Nghiên cứu<small>Research</small></td><td>Đối chứng cá nhân hóa có giải thích; đánh đổi tự chấp nhận và sai số OMR; sinh đề theo ràng buộc; sinh câu hỏi bám nguồn và kiểm định AI có chuyên gia đánh giá.</td><td>Có bộ dữ liệu, phương pháp đối chứng, chỉ số, cấu hình tái lập và giới hạn kết luận cho từng thí nghiệm.</td></tr>
+          <tr><td>Mở rộng<small>Stretch</small></td><td>BKT khi đủ dữ liệu; dự đoán độ khó trước thi; IRT và quy đổi điểm giữa đề; thích ứng từng câu; mô hình học sâu; chấm tự luận bằng AI; mẫu phiếu tùy ý và quét hàng loạt.</td><td>Chỉ xem xét sau khi nguyên mẫu và thực nghiệm ưu tiên hoàn tất, với dữ liệu phù hợp.</td></tr>
+          <tr><td>Loại khỏi phạm vi hiện tại</td><td>Tự phê duyệt câu hỏi AI; tự công bố điểm chưa xác nhận; điểm chất lượng câu hỏi tổng hợp chưa được kiểm chứng; tự kết luận gian lận; hệ thống LMS hoặc gia sư AI toàn diện.</td><td>Không đưa thành yêu cầu nghiệm thu của đồ án.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="caption">Research là lớp đánh giá phương pháp, có thể áp dụng cho chức năng MVP hoặc Advanced; không phải một giai đoạn triển khai độc lập.</p>
+      <div class="note"><p><strong>Thứ tự ưu tiên tổng hợp.</strong> Giữ cá nhân hóa có giải thích và OMR có kiểm soát là hai hướng ưu tiên theo định hướng v0.2. Sinh đề theo ràng buộc được triển khai ở quy mô nhỏ có kiểm chứng. AI tập trung sinh câu hỏi bám nguồn và bộ tiêu chí giới hạn, phụ thuộc khả năng bố trí người gán nhãn. Phạm vi sâu hơn của từng hướng được chốt tại mốc duyệt thiết kế thực nghiệm.</p></div>
+    </section>
+
+    <section id="methods">
+      <h2><span class="number">05 / Thiết kế nghiên cứu</span>Phương pháp và câu hỏi đánh giá</h2>
+      <article class="method">
+        <p class="method-tag">Hướng A · Bảo · Ưu tiên chính</p>
+        <h3>5.1. Luyện tập cá nhân hóa có giải thích</h3>
+        <p><strong>Câu hỏi nghiên cứu.</strong> Việc chọn bộ luyện tập từ hồ sơ từng chủ đề có cải thiện độ bao phủ nội dung cần củng cố và mức phù hợp độ khó so với bộ chung hoặc chọn ngẫu nhiên có ràng buộc hay không? Bằng chứng và giải thích có giúp giảng viên phát hiện, điều chỉnh đề xuất chưa phù hợp hiệu quả hơn hay không? <a class="citation" href="#ref-bao">[1]</a></p>
+        <p>Phương pháp khởi đầu bằng ước lượng có giá trị tiên nghiệm và trọng số bằng chứng. Chỉ kết quả đã xác nhận được sử dụng; từng hồ sơ lưu phiên bản chính sách, danh sách bằng chứng và mức đầy đủ dữ liệu. Giá trị năng lực ước lượng không được trình bày như điểm chính thức hay nhãn cố định về sinh viên.</p>
+        <div class="equation" aria-label="Công thức ước lượng năng lực">M(s, k) = [α · m₀ + ∑ wᵢyᵢ] / [α + ∑ wᵢ]</div>
+        <p class="caption">s là sinh viên; k là chủ đề; m₀ là giá trị tiên nghiệm; α là trọng số tiên nghiệm; yᵢ là điểm chuẩn hóa của bằng chứng hợp lệ; wᵢ là trọng số theo chính sách. Tham số phải được công bố và phân tích độ nhạy.</p>
+        <p>Bộ chọn lọc lấy câu hỏi đã duyệt, đúng học phần và đủ siêu dữ liệu; sau đó ưu tiên nhu cầu củng cố, mức khó phù hợp, chuẩn đầu ra, độ mới và giới hạn lặp. Các điều kiện bắt buộc gồm số câu, không lặp trong bộ và độ bao phủ tối thiểu. Khi thiếu dữ liệu người học, hệ thống cung cấp bài chẩn đoán hoặc bộ cân bằng theo chính sách; khi thiếu câu hỏi, hệ thống báo phần thiếu.</p>
+        <p>Giải thích được tạo trực tiếp từ hồ sơ, quy tắc chọn và bằng chứng. Giảng viên có thể thay câu hoặc thay tỷ lệ độ khó, kèm lý do. Đánh giá lại sử dụng câu khác cùng chuẩn đầu ra. Mức đầy đủ bằng chứng của nguyên mẫu chưa được coi là xác suất tin cậy đã hiệu chuẩn; chỉ đánh giá hiệu chuẩn dự đoán khi đầu ra có diễn giải xác suất phù hợp.</p>
+      </article>
+      <article class="method">
+        <p class="method-tag">Hướng B · Hộp · Ưu tiên chính</p>
+        <h3>5.2. Nhận diện phiếu giấy và xác nhận kết quả</h3>
+        <p><strong>Câu hỏi nghiên cứu.</strong> Kiểm tra chất lượng ảnh và chuyển trường hợp không chắc chắn sang xác nhận thủ công làm thay đổi tỷ lệ lỗi tự chấp nhận, độ bao phủ tự động và tổng thời gian xử lý như thế nào so với nhận diện bằng ngưỡng cố định? <a class="citation" href="#ref-hop">[4]</a></p>
+        <p>Nguyên mẫu dùng một mẫu phiếu A4, điểm neo, mã mẫu và mã đề. Quy trình gồm kiểm tra đầu vào, hiệu chỉnh phối cảnh, tách vùng đáp án, nhận diện trạng thái, kiểm tra trường hợp nghi ngờ và xác nhận. Ô trống, tô nhiều ô và không đọc được được lưu thành trạng thái riêng. Mã QR chỉ tham chiếu định danh phiếu và mã đề; đáp án đúng được quản lý phía hệ thống.</p>
+        <p>Ảnh nguồn, kết quả ban đầu, vùng ảnh cần xem, người hiệu chỉnh và kết quả xác nhận được lưu để đối chiếu. Xử lý ảnh cổ điển là phương pháp cơ sở; việc bổ sung mô hình học máy chỉ được xem xét khi thực nghiệm chỉ ra nhu cầu. Không tự nhận mọi phiếu và không chuyển mọi phiếu sang kiểm tra thủ công để tối ưu riêng một chỉ số.</p>
+        <p>Kết quả OMR đã xác nhận và bài trực tuyến dùng cùng định danh câu, phương án gốc, phiên bản đáp án và bộ chấm. Sửa nhận diện một bài được phân biệt với sửa đáp án đúng của cả đề. Mọi lần sửa điểm tạo phiên bản mới và đánh dấu báo cáo phụ thuộc cần tính lại.</p>
+      </article>
+      <article class="method">
+        <p class="method-tag">Hướng C · Lâm · Thực nghiệm có kiểm soát</p>
+        <h3>5.3. Sinh nhiều mã đề theo ràng buộc</h3>
+        <p><strong>Câu hỏi nghiên cứu.</strong> Chọn câu theo ràng buộc có giảm độ lệch giữa các mã đề so với chọn ngẫu nhiên trên cùng tập nghiệm hợp lệ hay không? Hệ thống nhận biết và giải thích được những trường hợp thiếu câu hoặc xung đột ma trận đề nào? <a class="citation" href="#ref-lam">[2]</a></p>
+        <p>Ma trận đề tách điều kiện bắt buộc và mục tiêu tối ưu. Số câu, trạng thái đã duyệt, không trùng câu và chuẩn đầu ra bắt buộc là điều kiện hợp lệ; sai lệch phân bố chủ đề, độ khó dự kiến, Bloom và thời gian là các mục tiêu có trọng số được khai báo. Giới hạn tái sử dụng câu hỏi được áp dụng trên toàn bộ nhóm mã đề.</p>
+        <p>Phương pháp ưu tiên thuật toán tìm kiếm theo quy tắc và sửa nghiệm. Bộ giải chính xác hoặc vét cạn trên bài toán nhỏ cung cấp kết quả đối chiếu về tính khả thi. Mỗi mã đề được so với ma trận và từng mã còn lại; báo cả sai lệch trung bình và lớn nhất. Kiểm tra sơ bộ theo số lượng chỉ phát hiện một số điều kiện thiếu, không thay thế kết luận của bộ giải.</p>
+        <p>Hết thời gian tìm kiếm phải được ghi là chưa xác định trong giới hạn thời gian. Chỉ kết luận không khả thi khi có căn cứ tương ứng. Phương án nới ràng buộc cần nêu thay đổi và được giảng viên xác nhận trước khi tạo phiên bản ma trận mới. Tương đương theo siêu dữ liệu chưa chứng minh tương đương tâm trắc hoặc khả năng quy đổi điểm.</p>
+      </article>
+      <article class="method">
+        <p class="method-tag">Hướng D · Duy · Phụ thuộc dữ liệu gán nhãn</p>
+        <h3>5.4. Sinh và kiểm định câu hỏi có bằng chứng nguồn</h3>
+        <p><strong>Câu hỏi nghiên cứu.</strong> Truy xuất nội dung liên quan trước khi sinh câu hỏi có cải thiện độ bám nguồn và độ đúng trích dẫn so với sinh trực tiếp không? Cảnh báo AI chính xác đến đâu theo từng tiêu chí và có hỗ trợ giảng viên phát hiện lỗi mà không làm tăng bỏ sót không? <a class="citation" href="#ref-duy">[3]</a></p>
+        <p>Hệ thống chia tài liệu thành đoạn có định danh và phiên bản, truy xuất đoạn liên quan, sinh câu hỏi có cấu trúc và lưu bằng chứng nguồn. PDF sử dụng số trang khi xác định được; DOCX ưu tiên mục và đoạn, không suy đoán số trang từ văn bản trích xuất. Bản nháp giữ thông tin mô hình, cấu hình yêu cầu, nguồn truy xuất và lịch sử chỉnh sửa.</p>
+        <p>Bộ kiểm định giới hạn ở bốn nhóm: độ bám nguồn và tính đúng; mơ hồ hoặc lỗi cấu trúc; chất lượng phương án nhiễu; mức nhận thức Bloom. Mỗi tiêu chí có cảnh báo và bằng chứng riêng. Phát hiện trùng ngữ nghĩa được mở rộng sau; dự đoán độ khó và điểm chất lượng tổng hợp chưa đưa vào đóng góp chính.</p>
+        <p>Giảng viên xem đồng thời câu hỏi, nguồn, cảnh báo và phần chỉnh sửa trước khi phê duyệt. Đánh giá tự động chỉ bổ trợ nhãn chuyên gia. Thí nghiệm quy trình kiểm duyệt đo thời gian, số lỗi phát hiện và số lỗi bỏ sót; tốc độ duyệt hoặc tỷ lệ chấp nhận cao không được dùng riêng để kết luận chất lượng tốt hơn.</p>
+      </article>
+    </section>
+
+    <section id="architecture">
+      <h2><span class="number">06 / Thiết kế tích hợp</span>Kiến trúc và hợp đồng dữ liệu</h2>
+      <p>Định hướng kiến trúc đề xuất là ứng dụng web theo mô-đun, dịch vụ nghiệp vụ dùng chung cơ sở dữ liệu quan hệ và kho tệp cho tài liệu, ảnh phiếu. Tác vụ xử lý AI, nhận diện ảnh và tính lại báo cáo có thể chạy nền; chỉ mục truy xuất phục vụ miền AI được tách khỏi dữ liệu nghiệp vụ gốc. Đây là lựa chọn thiết kế sơ bộ để giảm chi phí tích hợp; công nghệ cụ thể chưa được khóa.</p>
+      <ol class="lifecycle" aria-label="Các giai đoạn của vòng đời đánh giá">
+        <li><span>GIAI ĐOẠN 01</span><b>Tài liệu và câu hỏi</b>Lưu nguồn, siêu dữ liệu và phiên bản đã duyệt.</li>
+        <li><span>GIAI ĐOẠN 02</span><b>Ma trận và mã đề</b>Chọn câu, kiểm tra và khóa bản chụp dữ liệu.</li>
+        <li><span>GIAI ĐOẠN 03</span><b>Thu nhận bài làm</b>Lưu bài trực tuyến hoặc nhận diện phiếu giấy.</li>
+        <li><span>GIAI ĐOẠN 04</span><b>Xác nhận và chấm</b>Chuẩn hóa câu trả lời, chấm theo phiên bản đáp án.</li>
+        <li><span>GIAI ĐOẠN 05</span><b>Phân tích kết quả</b>Tính thống kê và hồ sơ theo bằng chứng hợp lệ.</li>
+        <li><span>GIAI ĐOẠN 06</span><b>Luyện tập và cải thiện</b>Đề xuất bài, đánh giá lại và rà soát câu hỏi.</li>
+      </ol>
+      <div class="table-wrap" role="region" aria-label="Hợp đồng dữ liệu giữa các miền" tabindex="0"><table class="wide">
+        <caption>Bảng 4. Dữ liệu bàn giao và điều kiện bất biến.</caption>
+        <thead><tr><th>Bên cung cấp / bên sử dụng</th><th>Dữ liệu tối thiểu</th><th>Điều kiện bất biến</th></tr></thead>
+        <tbody>
+          <tr><td>Duy / Bảo</td><td>Bản nháp câu hỏi, đáp án, bằng chứng nguồn và phiên bản tài liệu, cảnh báo, phiên bản mô hình và cấu hình sinh.</td><td>Nội dung AI chỉ được dùng trong đề sau khi người có quyền duyệt.</td></tr>
+          <tr><td>Bảo / Lâm, Duy</td><td>Định danh câu và phiên bản; chủ đề; chuẩn đầu ra; nhãn độ khó; Bloom; thời gian dự kiến; trạng thái; nguồn.</td><td>Phân biệt siêu dữ liệu đã duyệt với gợi ý AI. Đề đã phát hành tham chiếu phiên bản cố định.</td></tr>
+          <tr><td>Lâm / Hộp, dịch vụ thi</td><td>Phiên bản ma trận, mã đề, bản chụp câu hỏi, ánh xạ vị trí câu và nhãn phương án về định danh gốc; phiên bản đáp án chấm.</td><td>Hoán vị câu và phương án vẫn khôi phục đúng câu trả lời chuẩn.</td></tr>
+          <tr><td>Hộp / Bảo, báo cáo</td><td>Định danh lượt làm, người học và lớp; hình thức làm; câu trả lời xác nhận; phiên bản điểm; trạng thái; cỡ mẫu và phiên bản phân tích.</td><td>Không tính trùng lần quét; dữ liệu còn chờ xác nhận không cập nhật hồ sơ chính thức.</td></tr>
+          <tr><td>Các miền / lớp kiểm soát chung</td><td>Người thao tác, thời điểm, quyền, lý do, giá trị trước và sau, bằng chứng, định danh tác vụ và phiên bản phụ thuộc.</td><td>Tái dựng được quyết định cũ; sửa dữ liệu nguồn tạo phiên bản mới và yêu cầu tính lại kết quả phụ thuộc.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Sau phúc khảo hoặc sửa đáp án, hệ thống tạo phiên bản điểm mới, tính lại thống kê và hồ sơ liên quan. Bộ luyện tập đã giao giữ nguyên căn cứ tại thời điểm tạo; đề xuất tiếp theo dùng phiên bản dữ liệu mới. Chính sách tạm loại hay giữ phiên bản xác nhận trước của bài đang phúc khảo cần được thống nhất trước thí điểm.</p>
+      <h3>Nguyên tắc phân tích câu hỏi</h3>
+      <p>Tỷ lệ đúng của câu i được tính bằng số bài đúng chia cho số bài hợp lệ thực sự được giao câu đó. Độ phân biệt dùng tương quan giữa điểm câu và tổng điểm các câu còn lại trên nhóm bài có thể so sánh. Phân bố đáp án dựa trên định danh phương án gốc, kèm trạng thái trống hoặc không hợp lệ theo quy tắc chấm. Khi phương sai bằng không hoặc thiếu điểm phần còn lại phù hợp, chỉ số tương quan được ghi là không tính được. <a class="citation" href="#ref-hop">[4]</a> <a class="citation" href="#ref-item">[10]</a></p>
+      <p>Báo cáo luôn kèm số bài, nhóm người học, phiên bản câu và điểm, chính sách chọn lần làm, hình thức làm và tỷ lệ bài đã xác nhận. Các mã đề chỉ hoán vị cùng nội dung có thể chuẩn hóa chung; đề khác nội dung và dữ liệu luyện tập cá nhân hóa cần được phân tích riêng. Chỉ số thống kê là căn cứ rà soát câu hỏi, không tự động thay nhãn độ khó hay loại bỏ câu.</p>
+    </section>
+
+    <section id="requirements">
+      <h2><span class="number">07 / Đặc tả sơ bộ</span>Yêu cầu chức năng và chất lượng</h2>
+      <div class="table-wrap" role="region" aria-label="Yêu cầu chức năng và nghiệm thu" tabindex="0"><table class="wide">
+        <caption>Bảng 5. Yêu cầu chức năng và tình huống nghiệm thu.</caption>
+        <thead><tr><th>Mã</th><th>Yêu cầu</th><th>Bằng chứng nghiệm thu</th></tr></thead>
+        <tbody>
+          <tr><td>FR01</td><td>Quản lý học phần, lớp, tài liệu, chủ đề và chuẩn đầu ra; phân quyền theo hành động và phạm vi lớp.</td><td>Trợ giảng hoặc sinh viên không truy cập được bản nháp, đáp án chưa công bố hay dữ liệu lớp ngoài quyền.</td></tr>
+          <tr><td>FR02</td><td>Tạo, nhập, tìm kiếm, duyệt và tạo phiên bản câu hỏi; kiểm tra siêu dữ liệu trước khi sử dụng.</td><td>Câu đã dùng được sửa thành phiên bản mới; đề cũ vẫn tái dựng đúng nội dung và đáp án.</td></tr>
+          <tr><td>FR03</td><td>Sinh câu hỏi AI kèm nguồn, cảnh báo và quyết định duyệt.</td><td>Mỗi câu được chấp nhận truy lại được tài liệu, đoạn nguồn, cấu hình và người phê duyệt.</td></tr>
+          <tr><td>FR04</td><td>Tạo ma trận, sinh mã đề, kiểm tra ràng buộc và lưu báo cáo sai lệch.</td><td>Không phát hành mã đề vi phạm điều kiện bắt buộc; thay đổi ràng buộc có phiên bản và xác nhận.</td></tr>
+          <tr><td>FR05</td><td>Tổ chức bài trực tuyến với lịch, thời hạn, tự lưu, phục hồi kết nối và biên nhận nộp bài.</td><td>Thử mất kết nối và gửi lại yêu cầu nộp; không tạo hai kết quả cho một lượt làm hoặc mất đáp án đã được máy chủ xác nhận.</td></tr>
+          <tr><td>FR06</td><td>Xuất phiếu, nhận diện theo mẫu và kiểm tra trường hợp không chắc chắn.</td><td>Phiếu sai mã đề, thiếu điểm neo hoặc chưa được xác nhận không tự trở thành kết quả chính thức.</td></tr>
+          <tr><td>FR07</td><td>Chấm, duyệt, công bố và hiệu chỉnh kết quả theo phiên bản.</td><td>Cùng bộ đáp án chuẩn từ giấy và trực tuyến cho cùng điểm; thay key xác định đúng các bài cần chấm lại.</td></tr>
+          <tr><td>FR08</td><td>Phân tích câu hỏi, lớp và chuẩn đầu ra từ dữ liệu hợp lệ.</td><td>Các phép đếm và tỷ lệ khớp bộ tính tay; trạng thái thiếu dữ liệu và phiên bản cũ được hiển thị rõ.</td></tr>
+          <tr><td>FR09</td><td>Tạo bộ luyện tập, giải thích, cho phép điều chỉnh và đánh giá lại.</td><td>Khôi phục được bộ câu hỏi, hồ sơ, chính sách và lý do chọn tại thời điểm đề xuất; kiểm tra cả người học mới và thiếu câu.</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Yêu cầu phi chức năng.</strong> Kiểm soát truy cập phải được thực thi tại dịch vụ; tệp nguồn và ảnh phiếu chỉ mở cho người có quyền. Nhật ký cần đủ để tái dựng thao tác, nhưng lịch sử chỉ ghi thêm ở tầng ứng dụng chưa chứng minh khả năng chống sửa bởi quản trị viên cơ sở dữ liệu. Tác vụ gửi lại phải tránh xử lý trùng; lỗi chạy nền cần có trạng thái và cơ chế khôi phục. Giao diện hỗ trợ màn hình nhỏ, bàn phím và thông báo lỗi có thể hành động.</p>
+      <p>Đánh giá hiệu năng ghi p50 và p95 theo cấu hình phần cứng, số người dùng đồng thời và kích thước dữ liệu; AI ghi thêm chi phí mỗi câu được duyệt. Ngưỡng thời gian, tải đồng thời, thời hạn lưu ảnh và chính sách gửi tài liệu tới nhà cung cấp AI phải được xác định trước triển khai thí điểm, thay vì đặt cam kết định lượng khi chưa có phép đo cơ sở.</p>
+    </section>
+
+    <section id="evaluation">
+      <h2><span class="number">08 / Phương pháp kiểm chứng</span>Kế hoạch thực nghiệm và chỉ số</h2>
+      <p>Mỗi thí nghiệm phải khóa trước bộ dữ liệu, tập điều chỉnh và tập đánh giá, phương pháp đối chứng, cấu hình, chỉ số chính và quy tắc xử lý thất bại. Các quy mô dưới đây được kế thừa từ báo cáo thành viên như phương án tổ chức, không phải cỡ mẫu đã được chứng minh đủ về thống kê.</p>
+      <div class="table-wrap" role="region" aria-label="Kế hoạch thí nghiệm theo miền" tabindex="0"><table class="wide">
+        <caption>Bảng 6. Thiết kế thực nghiệm đề xuất.</caption>
+        <thead><tr><th>Thí nghiệm</th><th>Dữ liệu và đối chứng</th><th>Chỉ số chính / giới hạn</th></tr></thead>
+        <tbody>
+          <tr><td>E1. Toàn vẹn dữ liệu<small>Cả nhóm</small></td><td>Bộ ca sửa câu, đảo đáp án, quét lặp, sửa key, hai người cùng hiệu chỉnh, mất kết nối và truy cập sai quyền. Dùng cùng đáp án chuẩn cho đường giấy và trực tuyến.</td><td>Sai ánh xạ, kết quả không tái dựng được, xử lý trùng và chuyển trạng thái trái quyền. Toàn bộ ca bất biến đã định nghĩa phải đạt.</td></tr>
+          <tr><td>E2. Cá nhân hóa<small>Bảo</small></td><td>Dữ liệu mô phỏng mức nhỏ 30 sinh viên, 100 câu, 3 chủ đề; mức chính 100 sinh viên, 300 câu, 5 chủ đề; mức tải 500 sinh viên, 1.000 câu, 8 chủ đề. So bộ chung, ngẫu nhiên có ràng buộc, ưu tiên chủ đề yếu và phương pháp đề xuất.</td><td>Độ bao phủ chủ đề cần củng cố và chuẩn đầu ra; độ lệch độ khó; vi phạm ràng buộc; lặp câu; thời gian. Tách trường hợp mới, ít dữ liệu, thiếu câu và sửa điểm. Dữ liệu mô phỏng chỉ kiểm chứng hành vi thuật toán.</td></tr>
+          <tr><td>E3. OMR<small>Hộp</small></td><td>120 phiếu vật lý, 20 câu mỗi phiếu, 3 điều kiện chụp, tổng cộng 360 ảnh. Dùng 40 phiếu chỉnh tham số và 80 phiếu đánh giá; mọi ảnh cùng phiếu nằm trong cùng tập. So nhận diện ngưỡng với phương án kiểm tra và xác nhận.</td><td>Đúng toàn bộ đáp án và định danh mỗi ảnh; đúng từng câu; độ bao phủ tự động; lỗi trong phần tự chấp nhận; tỷ lệ và thời gian kiểm tra; điểm cuối so với chấm tay.</td></tr>
+          <tr><td>E4. Sinh đề<small>Lâm</small></td><td>Ngân hàng 60, 150 và 500 câu; tạo 3–5 mã đề với ma trận phù hợp quy mô. So thuật toán đề xuất với chọn ngẫu nhiên có loại hoặc sửa nghiệm sai. Bài toán nhỏ có bộ giải chính xác đối chiếu.</td><td>Tỷ lệ đủ mã đề hợp lệ; sai lệch theo thuộc tính, từng cặp đề và lớn nhất; bao phủ chuẩn đầu ra; tái sử dụng; thời gian. Đánh giá phát hiện không khả thi riêng với trường hợp hết thời gian.</td></tr>
+          <tr><td>E5. AI và kiểm duyệt<small>Duy</small></td><td>Tập đánh giá dự kiến 100–200 câu, cùng tài liệu và yêu cầu; hai người đánh giá độc lập nếu bố trí được. So sinh trực tiếp với truy xuất trước khi sinh; so kiểm duyệt có và không có cảnh báo.</td><td>Độ bám nguồn, tính đúng, khả năng trả lời, độ đúng trích dẫn; precision, recall, F1 theo lỗi; macro-F1 cho Bloom; mức đồng thuận; thời gian và lỗi bị bỏ sót. Ghi rõ điều kiện ngữ cảnh của từng đối chứng.</td></tr>
+          <tr><td>E6. Phân tích và thí điểm<small>Hộp, Bảo, Nam</small></td><td>Bộ đáp án tính tay để kiểm tra thống kê; thí điểm một học phần nếu có dữ liệu và người tham gia. Đánh giá cảnh báo và giải thích với giảng viên; kiểm tra chung trước và sau nếu nghiên cứu tiến bộ học tập.</td><td>Độ đúng phép tính; cảnh báo hữu ích; thời gian xem xét; tỷ lệ điều chỉnh và lý do. Hiệu quả học tập cần đối chứng và bài kiểm tra chung, không suy ra từ tỷ lệ hoàn thành.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>8.1. Định nghĩa chỉ số trọng tâm</h3>
+      <ul>
+        <li><strong>Độ bao phủ chuẩn đầu ra:</strong> số chuẩn đầu ra bắt buộc xuất hiện chia tổng số chuẩn đầu ra bắt buộc. Báo riêng từng đề hoặc bộ luyện tập; trường hợp không có mục tiêu bắt buộc được ghi không áp dụng.</li>
+        <li><strong>Sai lệch phân bố:</strong> một nửa tổng chênh lệch tuyệt đối giữa tỷ lệ thực tế và tỷ lệ mục tiêu trên các nhóm của một thuộc tính. Đối với sinh đề, tính thêm từng cặp mã đề và giá trị lớn nhất.</li>
+        <li><strong>Tỷ lệ lỗi tự chấp nhận OMR:</strong> số ảnh được tự chấp nhận nhưng sai đáp án, định danh hoặc mã đề chia tổng số ảnh được tự chấp nhận. Nếu không tự chấp nhận ảnh nào, ghi không tính được.</li>
+        <li><strong>Độ bao phủ tự động:</strong> số ảnh được tự chấp nhận chia tổng số ảnh đánh giá. Ảnh lỗi thuộc phạm vi bộ thử vẫn nằm trong mẫu số; báo cả số phiếu vật lý độc lập.</li>
+        <li><strong>Độ đúng trích dẫn:</strong> tỷ lệ trích dẫn được người đánh giá xác nhận định vị đúng và hỗ trợ nội dung tương ứng. Câu thiếu trích dẫn bắt buộc được ghi thất bại, không loại khỏi tập đánh giá.</li>
+        <li><strong>Tính đúng của giải thích:</strong> mức khớp giữa nội dung giải thích, hồ sơ bằng chứng, chính sách và câu đã chọn. Tỷ lệ chấp nhận hoặc chỉnh sửa được báo kèm nguyên nhân, không thay thế đánh giá này.</li>
+      </ul>
+      <h3>8.2. Kiểm soát sai lệch và khả năng tái lập</h3>
+      <p>Các phương pháp so sánh dùng cùng tập ứng viên và điều kiện bắt buộc; trường hợp không tạo được đủ bộ câu hỏi vẫn được ghi nhận. Dữ liệu câu hỏi chia tập theo tài liệu hoặc cụm nội dung để hạn chế rò rỉ. Với dữ liệu người học, tách theo thời gian và chỉ dùng lịch sử có trước quyết định. Với ảnh OMR, đơn vị độc lập là phiếu vật lý, không coi nhiều ảnh của cùng phiếu là nhiều người làm độc lập.</p>
+      <p>Nhãn chuyên gia được xây bằng tiêu chí thống nhất, gán độc lập trước khi xử lý bất đồng. Thí nghiệm kiểm duyệt phân bổ thứ tự có cân bằng và tránh để một người nhớ đáp án của cùng câu ở cả hai điều kiện. Kết quả báo cỡ mẫu, trung bình, độ phân tán, trường hợp xấu nhất và khoảng bất định khi phù hợp; ghi phiên bản dữ liệu, thuật toán, cấu hình, seed và chi phí. Nhận định về tiến bộ học tập phải tách khỏi nhận định về chất lượng thuật toán.</p>
+    </section>
+
+    <section id="implementation">
+      <h2><span class="number">09 / Tổ chức thực hiện</span>Lộ trình theo mốc nghiệm thu</h2>
+      <p>Repo chưa xác định thời hạn đồ án và năng lực thu thập dữ liệu. Vì vậy, lộ trình được tổ chức theo mốc phụ thuộc; lịch tuần và phân công lập trình chi tiết sẽ được gắn sau khi nhóm xác nhận nguồn lực.</p>
+      <div class="table-wrap" role="region" aria-label="Lộ trình triển khai" tabindex="0"><table class="wide">
+        <caption>Bảng 7. Mốc triển khai và sản phẩm bàn giao.</caption>
+        <thead><tr><th>Mốc</th><th>Chủ trì / phối hợp</th><th>Sản phẩm và điều kiện chuyển mốc</th></tr></thead>
+        <tbody>
+          <tr><td>M1. Khóa thiết kế</td><td>Nam và cả nhóm, giảng viên</td><td>Học phần, phân công điều chỉnh, loại câu, hợp đồng dữ liệu, quy tắc điểm và kế hoạch thí nghiệm được thống nhất; xác định người gán nhãn và quyền sử dụng tài liệu.</td></tr>
+          <tr><td>M2. Nền tảng dùng chung</td><td>Bảo chủ trì dữ liệu; Nam điều phối; Lâm và Hộp đối chiếu</td><td>Ngân hàng có phiên bản, ma trận và ánh xạ đề, bài trực tuyến, bộ chấm, quyền và lịch sử hoạt động. Phân công triển khai dịch vụ thi được ghi rõ. Hoàn thành E1 nền tảng.</td></tr>
+          <tr><td>M3. Nguyên mẫu từng miền</td><td>Bảo, Hộp, Lâm, Duy theo miền</td><td>Phương pháp đối chứng và nguyên mẫu ưu tiên chạy trên dữ liệu nhỏ; hoàn tất tập điều chỉnh, chốt tham số và kiểm tra định dạng bàn giao trước đánh giá cuối.</td></tr>
+          <tr><td>M4. Tích hợp và đo lường</td><td>Cả nhóm; Nam quản lý bằng chứng</td><td>Chạy E2–E5 theo phạm vi đã duyệt; tái kiểm tra dữ liệu khi nối các miền; xuất kết quả, lỗi và cấu hình có thể tái lập. Chạy E6 nếu đủ điều kiện.</td></tr>
+          <tr><td>M5. Báo cáo và bàn giao</td><td>Nam tổng hợp; các thành viên xác nhận miền</td><td>Báo cáo đối chứng, giới hạn, dữ liệu được phép chia sẻ, hướng dẫn vận hành và kịch bản trình diễn có lịch sử hiệu chỉnh.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Kịch bản tích hợp sử dụng các mã đề hoán vị từ cùng tập câu đã duyệt, một số bài trực tuyến và một số phiếu giấy. Sau nhận diện và kiểm tra, hệ thống chấm chung, công bố kết quả, thực hiện một lần sửa có lý do, tính lại thống kê và tạo bộ luyện tập có giải thích. Kịch bản này kiểm tra tính nhất quán toàn vòng đời; thực nghiệm sinh các đề khác tập câu được thực hiện riêng.</p>
+    </section>
+
+    <section id="limitations">
+      <h2><span class="number">10 / Thảo luận</span>Giới hạn, rủi ro và quyết định cần chốt</h2>
+      <p>Rủi ro chính là phạm vi quá rộng, siêu dữ liệu không nhất quán và thiếu người đánh giá chuyên môn. Ngân hàng mô phỏng giúp kiểm tra thuật toán nhưng không thay thế dữ liệu giáo dục thực. Bộ phiếu tự tạo chưa đại diện cho mọi thiết bị hoặc điều kiện sử dụng. Các kết quả AI phụ thuộc học phần, ngôn ngữ, mô hình và tiêu chí đánh giá; các tỷ lệ đúng sau thi phụ thuộc nhóm người học và cách phân phối câu hỏi.</p>
+      <p>Biện pháp kiểm soát gồm khóa hợp đồng dữ liệu trước tích hợp, chuẩn bị phương pháp cơ sở cho từng miền, tách kiểm thử phần mềm khỏi đánh giá giáo dục và giảm độ sâu mở rộng khi thiếu dữ liệu. Nếu chưa tổ chức được thí điểm hoặc gán nhãn chuyên gia, báo cáo phải giới hạn kết luận ở tính đúng kỹ thuật và thử nghiệm có kiểm soát.</p>
+      <div class="table-wrap" role="region" aria-label="Các quyết định cần thống nhất" tabindex="0"><table class="wide">
+        <caption>Bảng 8. Quyết định cần hoàn thành trước triển khai và thí điểm.</caption>
+        <thead><tr><th>Nhóm quyết định</th><th>Nội dung cần xác nhận</th><th>Chủ thể phối hợp</th></tr></thead>
+        <tbody>
+          <tr><td>Phạm vi và nguồn lực</td><td>Xác nhận Bảo nhận cá nhân hóa; độ sâu bốn hướng nghiên cứu; người phụ trách dịch vụ thi; thời hạn, ngân sách AI và số người gán nhãn.</td><td>Nam, cả nhóm, giảng viên</td></tr>
+          <tr><td>Dữ liệu học phần</td><td>Học phần, ngôn ngữ, quyền sử dụng tài liệu; người duyệt chủ đề, chuẩn đầu ra, Bloom và độ khó; cách chia bằng chứng khi câu thuộc nhiều chủ đề.</td><td>Bảo, Duy, giảng viên</td></tr>
+          <tr><td>Ma trận và phiếu</td><td>Số câu, số phương án, mẫu A4; mức tái sử dụng giữa các mã đề; điều kiện được nới và người có quyền xác nhận.</td><td>Lâm, Hộp, giảng viên</td></tr>
+          <tr><td>Kết quả và phúc khảo</td><td>Quy tắc ô trống, tô nhiều ô; quyền sửa key và công bố lại; chính sách bài đang phúc khảo, chọn lần làm và tính lại hồ sơ.</td><td>Hộp, Bảo, Nam</td></tr>
+          <tr><td>Chính sách luyện tập</td><td>Giá trị tiên nghiệm, trọng số, ngưỡng đủ dữ liệu, bài chẩn đoán, giới hạn lặp và cách đánh giá lại.</td><td>Bảo, giảng viên</td></tr>
+          <tr><td>Thí điểm và dữ liệu cá nhân</td><td>Có người học và bài kiểm tra chung hay không; quyền xem và xuất dữ liệu; thời hạn lưu ảnh; điều kiện gửi tài liệu cho nhà cung cấp AI.</td><td>Nam, giảng viên, đơn vị thí điểm</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="contributions">
+      <h2><span class="number">11 / Kết quả kỳ vọng</span>Đóng góp dự kiến</h2>
+      <p><strong>Về kỹ thuật,</strong> đề tài dự kiến cung cấp nguyên mẫu tích hợp và hợp đồng dữ liệu có thể truy vết từ câu hỏi đến kết quả và bộ luyện tập. Bộ kiểm thử sẽ làm rõ tính nhất quán giữa bài giấy và trực tuyến, ánh xạ mã đề, sửa điểm và tái tính các báo cáo phụ thuộc.</p>
+      <p><strong>Về thực nghiệm,</strong> đề tài dự kiến xây dựng các phép đối chứng cho cá nhân hóa, OMR, sinh đề và kiểm định AI; công bố cấu hình, chỉ số, trường hợp thất bại và dữ liệu được phép chia sẻ. Giá trị của phương pháp đề xuất được xác định bởi kết quả đo, kể cả khi kết quả không vượt phương pháp cơ sở.</p>
+      <p><strong>Về sử dụng,</strong> hệ thống hướng tới hỗ trợ giảng viên kiểm tra bằng chứng và điều chỉnh quyết định, đồng thời giúp sinh viên hiểu kết quả và mục đích luyện tập. Khả năng cải thiện hiệu quả học tập là giả thuyết cần kiểm chứng bằng thí điểm phù hợp; proposal chưa đưa ra cam kết về mức cải thiện hoặc tính mới của thuật toán.</p>
+    </section>
+
+    <section id="references">
+      <h2><span class="number">12 / Nguồn và truy vết</span>Tài liệu tham khảo</h2>
+      <p class="caption">Tài liệu [1]–[4] là nguồn trực tiếp của bản tổng hợp. Tài liệu [5] xác định bối cảnh phân công. Các nguồn [6]–[10] được chọn từ danh mục tham khảo của thành viên để đọc tiếp; bản tổng hợp này không thực hiện một đợt xác minh độc lập toàn bộ nguồn bên ngoài. Các bản gốc được lưu nguyên trạng để đối chiếu.</p>
+      <ol class="refs">
+        <li id="ref-bao"><span class="ref-id">[1]</span><div>Nguyễn Quốc Bảo (30/09/2026). <a href="sources/NguyenQuocBao.md">Question Bank, Learning Content &amp; Explainable Personalized Practice</a>.<small>Báo cáo thành viên. Căn cứ cho nền tảng dữ liệu, cá nhân hóa, giải thích và thiết kế đánh giá.</small></div></li>
+        <li id="ref-lam"><span class="ref-id">[2]</span><div>Trương Hoàng Lâm (28/09/2026). <a href="sources/TruongHoangLam.md">Exam Blueprint &amp; Exam Generation</a>.<small>Báo cáo thành viên. Căn cứ cho ràng buộc, độ lệch giữa mã đề và đánh giá tính khả thi.</small></div></li>
+        <li id="ref-duy"><span class="ref-id">[3]</span><div>Nguyễn Trường Duy (29/09/2026). <a href="sources/NguyenTruongDuy.html">AI Question Generation &amp; Pre-exam Question Intelligence</a>.<small>Báo cáo thành viên. Căn cứ cho sinh câu hỏi bám nguồn, bộ kiểm định và thực nghiệm kiểm duyệt.</small></div></li>
+        <li id="ref-hop"><span class="ref-id">[4]</span><div>Nguyễn Văn Hộp (30/09/2026). <a href="sources/NguyenVanHop.md">Paper/OMR, Grading &amp; Item Analysis</a>.<small>Báo cáo thành viên. Căn cứ cho OMR, phiên bản kết quả và phân tích câu hỏi.</small></div></li>
+        <li id="ref-project"><span class="ref-id">[5]</span><div>Nhóm Intelligent Assessment Platform. <a href="../research-assignment/brief.md">Research Assignment Brief</a>; <a href="../research-assignment/#adjustments">Đề xuất điều chỉnh phân công</a>; <a href="../revision-notes.md">Ghi chú v0.2</a>; <a href="../proposal-spec.md">Đặc tả ý tưởng ban đầu</a>.<small>Đặc tả ban đầu được giữ để đối chiếu; phạm vi trong proposal này là kết quả tổng hợp sau nghiên cứu.</small></div></li>
+        <li id="ref-kt"><span class="ref-id">[6]</span><div>Abdelrahman, G., Wang, Q., &amp; Nunes, B. (2023). <a href="https://doi.org/10.1145/3569576">Knowledge Tracing: A Survey</a>. ACM Computing Surveys, 55(11), Article 224.<small>Được dẫn trong báo cáo [1]; cơ sở lựa chọn mô hình theo dõi trạng thái học tập.</small></div></li>
+        <li id="ref-explain"><span class="ref-id">[7]</span><div>Takami, K., Flanagan, B., Dai, Y., &amp; Ogata, H. (2024). <a href="https://doi.org/10.4018/IJDET.337600">Evaluating the Effectiveness of Bayesian Knowledge Tracing Model-Based Explainable Recommender</a>. International Journal of Distance Education Technologies, 22(1).<small>Được dẫn trong báo cáo [1]; tham khảo thiết kế đánh giá gợi ý có giải thích.</small></div></li>
+        <li id="ref-ata"><span class="ref-id">[8]</span><div>Yang, H. và cộng sự (2020). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7174804/">Automated Test Assembly Using SAS Operations Research Software in a Medical Licensing Examination</a>.<small>Được dẫn trong báo cáo [2]; cơ sở tham khảo mô hình chọn câu theo ràng buộc.</small></div></li>
+        <li id="ref-rag"><span class="ref-id">[9]</span><div>Li, Z. và cộng sự (2025). <a href="https://doi.org/10.1016/j.caeai.2025.100417">Retrieval-augmented generation for educational application: A systematic survey</a>. Computers and Education: Artificial Intelligence, 8, 100417.<small>Được dẫn trong báo cáo [3]; cơ sở tham khảo truy xuất và sinh nội dung trong giáo dục.</small></div></li>
+        <li id="ref-item"><span class="ref-id">[10]</span><div>University of Washington, Institutional Assessment &amp; Evaluation. <a href="https://www.washington.edu/assessment/scanning-scoring/scoring/reports/item-analysis/">Understanding Item Analyses</a>.<small>Được dẫn trong báo cáo [4]; tham khảo cách đọc và giới hạn của chỉ số phân tích câu hỏi.</small></div></li>
+      </ol>
+    </section>
+    <footer class="report-footer"><span>Intelligent Assessment Platform · Proposal tổng hợp 1.0 · 02/10/2026</span><a href="#report">Đầu báo cáo</a></footer>
+  </main>
+</div>
+</body>
+</html>

@@ -2,6 +2,12 @@
 
 Trang tài liệu nội bộ tiếng Việt, diễn giải từ đặc tả `proposal-spec.md`.
 
+## Proposal tổng hợp nghiên cứu
+
+Trang `proposal/index.html` tổng hợp bốn báo cáo thành viên, đối chiếu brief và phương án điều chỉnh phân công trong repo. Nội dung gồm cơ sở nghiên cứu, ma trận giải pháp liên quan, phạm vi, phương pháp, kiến trúc dữ liệu, yêu cầu, kế hoạch thực nghiệm và các quyết định cần thống nhất. Đây là đề xuất để thẩm định, chưa phải kết quả thực nghiệm hoặc phạm vi đã phê duyệt.
+
+Mở `/proposal/` trên máy chủ local hoặc `proposal/index.html` trực tiếp. Trang dùng `proposal/styles.css` và `proposal/app.js`, hỗ trợ màn hình nhỏ, mục lục và nút in báo cáo. Bốn báo cáo gốc được lưu nguyên trạng tại `proposal/sources/` để các trích dẫn nội bộ hoạt động cả trên GitHub Pages.
+
 ## Cấu trúc
 
 ```
