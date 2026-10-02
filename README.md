@@ -6,6 +6,8 @@ Trang tài liệu nội bộ tiếng Việt, diễn giải từ đặc tả `pro
 
 Trang `proposal/index.html` tổng hợp bốn báo cáo thành viên, đối chiếu brief và phương án điều chỉnh phân công trong repo. Nội dung gồm cơ sở nghiên cứu, ma trận giải pháp liên quan, phạm vi, phương pháp, kiến trúc dữ liệu, yêu cầu, kế hoạch thực nghiệm và các quyết định cần thống nhất. Đây là đề xuất để thẩm định, chưa phải kết quả thực nghiệm hoặc phạm vi đã phê duyệt.
 
+Bản proposal 1.1 xác định giảng viên là người dùng chính và sinh viên là đối tượng thụ hưởng theo quyết định của chủ đồ án. Nguyên mẫu tập trung không gian giảng viên; cá nhân hóa là công cụ đề xuất, duyệt và xuất bộ luyện tập. Dữ liệu bài làm được nhập theo mẫu CSV hoặc thu nhận qua OMR. Cổng sinh viên, phòng thi trực tuyến, tự luyện, bảng tiến độ và cổng phúc khảo không thuộc phạm vi hiện tại. Đánh giá sử dụng tập trung nhiệm vụ của giảng viên; thí điểm hiệu quả học tập là phần bổ sung. Sổ tay v0.2 và báo cáo nguồn phản ánh phạm vi trước điều chỉnh; proposal là tài liệu tham chiếu cho phạm vi hiện tại.
+
 Mở `/proposal/` trên máy chủ local hoặc `proposal/index.html` trực tiếp. Trang dùng `proposal/styles.css` và `proposal/app.js`, hỗ trợ màn hình nhỏ, mục lục và nút in báo cáo. Bốn báo cáo gốc được lưu nguyên trạng tại `proposal/sources/` để các trích dẫn nội bộ hoạt động cả trên GitHub Pages.
 
 ## Cấu trúc

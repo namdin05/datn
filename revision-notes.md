@@ -1,3 +1,14 @@
+# Cập nhật phạm vi proposal 1.1 — 02/10/2026
+
+Quyết định của chủ đồ án: giảng viên là đối tượng sử dụng chính, sinh viên là đối tượng thụ hưởng. Phạm vi hiện tại được trình bày trong [proposal tổng hợp](proposal/index.html#target-users).
+
+- Tập trung giao diện và quy trình vào giảng viên: tạo đề, nhập bài, kiểm tra OMR, xác nhận và xuất kết quả, phân tích và lựa chọn hoạt động hỗ trợ.
+- Giữ nghiên cứu cá nhân hóa ở mức đề xuất bộ luyện tập để giảng viên duyệt và xuất; hồ sơ sinh viên là dữ liệu theo lớp, không yêu cầu tài khoản sinh viên.
+- Thay phòng thi trực tuyến trong MVP bằng xuất đề và nhập câu trả lời từng câu theo mẫu CSV. OMR tiếp tục là hướng ưu tiên.
+- Đưa cổng sinh viên, tự luyện, bảng tiến độ cá nhân, thông báo, phòng thi trực tuyến và cổng phúc khảo ra ngoài phạm vi nghiệm thu hiện tại.
+- Đánh giá trải nghiệm và hiệu quả công việc tập trung vào giảng viên. Nghiên cứu tiến bộ học tập của sinh viên là phần bổ sung khi có thí điểm phù hợp.
+- Báo cáo thành viên và đặc tả ban đầu được giữ nguyên làm nguồn đối chiếu; không coi điều chỉnh mới là kết luận có sẵn trong các báo cáo đó.
+
 # Ghi chú cập nhật v0.2 — 22/09/2026
 
 Nguồn: đặc tả gốc (proposal-spec.md), yêu cầu bổ sung của chủ đồ án và thảo luận trong nhóm. Đây là thiết kế đề xuất, chưa phải tính năng đã triển khai.
