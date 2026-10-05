@@ -4,25 +4,33 @@ import cors from "cors";
 import { Server } from "socket.io";
 import {
   addPlayer,
+  authenticateParticipant,
   createRoom,
   currentQuestion,
+  deleteRoom,
+  findPlayerBySocket,
   findRoomBySocket,
   getRoom,
   publicState,
   quiz,
+  resetHostReconnectTimer,
   resetRoomTimer,
 } from "./roomManager.js";
 import { publicQuestion } from "./quiz.js";
+
+const HOST_RECONNECT_GRACE_MS = 60_000;
 
 const app = express();
 app.use(cors());
 app.get("/health", (_req, res) =>
   res.json({ ok: true, service: "qforge-server" }),
 );
+
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: { origin: true, credentials: true },
 });
+
 const channel = (room) => `room:${room.roomCode}`;
 const fail = (ack, message) => ack?.({ success: false, message });
 const ok = (ack, data = {}) => ack?.({ success: true, ...data });
@@ -35,9 +43,10 @@ const broadcastQuestion = (room) =>
       "question:changed",
       publicQuestion(currentQuestion(room), room.currentQuestionIndex),
     );
+
 function resultFor(room, player) {
-  let correct = 0,
-    answered = 0;
+  let correct = 0;
+  let answered = 0;
   for (const [index, answers] of room.answersByQuestion) {
     const answer = answers.get(player.id);
     if (answer) {
@@ -55,27 +64,62 @@ function resultFor(room, player) {
     accuracy: Math.round((correct / quiz.questions.length) * 100),
   };
 }
+
+function snapshotFor(room, identity) {
+  const playerId = identity?.role === "player" ? identity.participantId : null;
+  return {
+    state: publicState(room),
+    question:
+      room.status === "ACTIVE"
+        ? publicQuestion(currentQuestion(room), room.currentQuestionIndex)
+        : null,
+    hasAnsweredCurrentQuestion:
+      Boolean(playerId) &&
+      room.status === "ACTIVE" &&
+      room.answersByQuestion.get(room.currentQuestionIndex)?.has(playerId),
+    result: playerId
+      ? room.results?.find((result) => result.playerId === playerId) || null
+      : null,
+    report:
+      identity?.role === "host" && room.results
+        ? { participants: room.results }
+        : null,
+    serverTime: Date.now(),
+  };
+}
+
+function sendSnapshot(socket, room, identity) {
+  socket.emit("room:snapshot", snapshotFor(room, identity));
+}
+
 function finishRoom(room) {
+  if (room.status === "FINISHED") return;
   resetRoomTimer(room);
+  resetHostReconnectTimer(room);
   room.status = "FINISHED";
   room.results = [...room.players.values()]
-    .map((p) => resultFor(room, p))
+    .map((player) => resultFor(room, player))
     .sort((a, b) => b.score - a.score);
+
   io.to(channel(room)).emit("quiz:finished");
-  for (const result of room.results)
-    io.to(result.playerId).emit("player:result", result);
-  io.to(room.hostSocketId).emit("quiz:report", { participants: room.results });
+  for (const result of room.results) {
+    const player = room.players.get(result.playerId);
+    if (player?.socketId) io.to(player.socketId).emit("player:result", result);
+  }
+  if (room.hostSocketId)
+    io.to(room.hostSocketId).emit("quiz:report", {
+      participants: room.results,
+    });
   broadcastState(room);
 }
+
 function startTimer(room) {
   resetRoomTimer(room);
-  room.timer = setTimeout(
-    () => {
-      if (room.status === "ACTIVE") advanceQuestion(room);
-    },
-    currentQuestion(room).durationSeconds * 1000,
-  );
+  room.timer = setTimeout(() => {
+    if (room.status === "ACTIVE") advanceQuestion(room);
+  }, currentQuestion(room).durationSeconds * 1000);
 }
+
 function advanceQuestion(room) {
   if (room.currentQuestionIndex >= quiz.questions.length - 1)
     return finishRoom(room);
@@ -87,30 +131,123 @@ function advanceQuestion(room) {
   startTimer(room);
 }
 
+function scheduleHostReconnect(room) {
+  resetHostReconnectTimer(room);
+  room.hostReconnectTimer = setTimeout(() => {
+    if (room.hostSocketId || room.status === "FINISHED") return;
+    if (room.status === "ACTIVE") {
+      finishRoom(room);
+      return;
+    }
+    room.status = "FINISHED";
+    io.to(channel(room)).emit("error", {
+      message: "Host did not reconnect; session ended.",
+    });
+    broadcastState(room);
+  }, HOST_RECONNECT_GRACE_MS);
+}
+
+function hostIdentity(room) {
+  return {
+    role: "host",
+    participantId: room.hostParticipantId,
+  };
+}
+
 io.on("connection", (socket) => {
-  socket.on("room:create", ({ hostName }, ack) => {
-    const room = createRoom(socket.id, hostName || "Host");
+  socket.on("room:create", ({ hostName } = {}, ack) => {
+    const { room, reconnectToken } = createRoom(socket.id, hostName || "Host");
+    socket.data.session = {
+      role: "host",
+      roomCode: room.roomCode,
+      participantId: room.hostParticipantId,
+    };
     socket.join(channel(room));
-    const state = publicState(room);
-    ok(ack, { roomCode: room.roomCode, state });
-    socket.emit("room:created", { roomCode: room.roomCode, state });
+    ok(ack, {
+      roomCode: room.roomCode,
+      state: publicState(room),
+      participantId: room.hostParticipantId,
+      reconnectToken,
+      role: "host",
+    });
+    socket.emit("room:created", {
+      roomCode: room.roomCode,
+      state: publicState(room),
+    });
   });
-  socket.on("room:join", ({ roomCode, nickname }, ack) => {
+
+  socket.on("room:join", ({ roomCode, nickname } = {}, ack) => {
     const room = getRoom(roomCode);
     if (!room) return fail(ack, "Room not found.");
     if (room.status !== "WAITING")
       return fail(ack, "This quiz has already started.");
     if (!nickname?.trim()) return fail(ack, "Nickname is required.");
-    const player = addPlayer(room, socket.id, nickname);
+
+    const { player, reconnectToken } = addPlayer(room, socket.id, nickname);
+    socket.data.session = {
+      role: "player",
+      roomCode: room.roomCode,
+      participantId: player.id,
+    };
     socket.join(channel(room));
-    ok(ack, { state: publicState(room), playerId: player.id });
+    ok(ack, {
+      state: publicState(room),
+      playerId: player.id,
+      participantId: player.id,
+      reconnectToken,
+      role: "player",
+      roomCode: room.roomCode,
+    });
     io.to(channel(room)).emit("player:joined", {
       playerId: player.id,
       nickname: player.nickname,
     });
     broadcastState(room);
   });
-  socket.on("quiz:start", ({ roomCode }, ack) => {
+
+  socket.on(
+    "room:resume",
+    ({ roomCode, participantId, reconnectToken, role } = {}, ack) => {
+      const room = getRoom(roomCode);
+      if (!room) return fail(ack, "Room not found or session expired.");
+
+      const identity = authenticateParticipant(
+        room,
+        role,
+        participantId,
+        reconnectToken,
+      );
+      if (!identity) return fail(ack, "Session is invalid or expired.");
+
+      if (role === "host") {
+        resetHostReconnectTimer(room);
+        room.hostSocketId = socket.id;
+        room.hostDisconnectedAt = null;
+      } else {
+        identity.player.socketId = socket.id;
+        identity.player.connected = true;
+        identity.player.disconnectedAt = null;
+      }
+
+      socket.data.session = {
+        role,
+        roomCode: room.roomCode,
+        participantId,
+      };
+      socket.join(channel(room));
+      ok(ack, {
+        roomCode: room.roomCode,
+        state: publicState(room),
+        participantId,
+        role,
+      });
+      socket.emit("room:resumed", { roomCode: room.roomCode, role });
+      sendSnapshot(socket, room, identity);
+      broadcastState(room);
+    },
+  );
+
+  socket.on("quiz:start", ({ roomCode } = {}, ack) => {
     const room = getRoom(roomCode);
     if (!room || room.hostSocketId !== socket.id)
       return fail(ack, "Only the host can start the quiz.");
@@ -126,11 +263,13 @@ io.on("connection", (socket) => {
     startTimer(room);
     ok(ack);
   });
+
   socket.on(
     "answer:submit",
-    ({ roomCode, questionId, selectedOptionId }, ack) => {
+    ({ roomCode, questionId, selectedOptionId, actionId } = {}, ack) => {
       const room = getRoom(roomCode);
       const question = room && currentQuestion(room);
+      const player = room && findPlayerBySocket(room, socket.id);
       if (
         !room ||
         room.status !== "ACTIVE" ||
@@ -138,28 +277,36 @@ io.on("connection", (socket) => {
         question.id !== questionId
       )
         return fail(ack, "Question is no longer active.");
-      if (!room.players.has(socket.id))
-        return fail(ack, "Only players can submit answers.");
+      if (!player) return fail(ack, "Only players can submit answers.");
       if (
         Date.now() - room.questionStartedAt >=
         question.durationSeconds * 1000
       )
         return fail(ack, "Time is up.");
-      if (!question.options.some((o) => o.id === selectedOptionId))
+      if (!question.options.some((option) => option.id === selectedOptionId))
         return fail(ack, "Invalid option.");
+
       const answers = room.answersByQuestion.get(room.currentQuestionIndex);
-      if (answers.has(socket.id))
+      if (answers.has(player.id)) {
+        socket.emit("answer:accepted", { questionId });
         return fail(ack, "You already answered this question.");
-      answers.set(socket.id, { selectedOptionId, submittedAt: Date.now() });
+      }
+      answers.set(player.id, {
+        actionId: actionId || null,
+        selectedOptionId,
+        submittedAt: Date.now(),
+      });
       ok(ack);
       socket.emit("answer:accepted", { questionId });
-      io.to(room.hostSocketId).emit("answer:progress", {
-        answered: answers.size,
-        total: room.players.size,
-      });
+      if (room.hostSocketId)
+        io.to(room.hostSocketId).emit("answer:progress", {
+          answered: answers.size,
+          total: room.players.size,
+        });
     },
   );
-  socket.on("question:next", ({ roomCode }, ack) => {
+
+  socket.on("question:next", ({ roomCode } = {}, ack) => {
     const room = getRoom(roomCode);
     if (!room || room.hostSocketId !== socket.id)
       return fail(ack, "Only the host can change questions.");
@@ -167,7 +314,8 @@ io.on("connection", (socket) => {
     advanceQuestion(room);
     ok(ack);
   });
-  socket.on("quiz:finish", ({ roomCode }, ack) => {
+
+  socket.on("quiz:finish", ({ roomCode } = {}, ack) => {
     const room = getRoom(roomCode);
     if (!room || room.hostSocketId !== socket.id)
       return fail(ack, "Only the host can finish the quiz.");
@@ -175,37 +323,62 @@ io.on("connection", (socket) => {
     finishRoom(room);
     ok(ack);
   });
-  socket.on("room:sync", ({ roomCode }, ack) => {
+
+  socket.on("room:close", ({ roomCode } = {}, ack) => {
+    const room = getRoom(roomCode);
+    if (!room || room.hostSocketId !== socket.id)
+      return fail(ack, "Only the host can close this room.");
+
+    io.to(channel(room)).emit("room:closed", {
+      message: "The host closed this room.",
+    });
+    broadcastState(room);
+    ok(ack);
+    io.in(channel(room)).socketsLeave(channel(room));
+    deleteRoom(room);
+  });
+
+  socket.on("room:sync", ({ roomCode } = {}, ack) => {
     const room = getRoom(roomCode);
     if (!room) return fail(ack, "Room not found.");
+    const player = findPlayerBySocket(room, socket.id);
+    const identity =
+      room.hostSocketId === socket.id
+        ? hostIdentity(room)
+        : player
+          ? { role: "player", participantId: player.id, player }
+          : null;
+    if (!identity) return fail(ack, "You are not connected to this room.");
     ok(ack, { state: publicState(room) });
-    socket.emit("room:snapshot", {
-      state: publicState(room),
-      question:
-        room.status === "ACTIVE"
-          ? publicQuestion(currentQuestion(room), room.currentQuestionIndex)
-          : null,
-      hasAnsweredCurrentQuestion:
-        room.status === "ACTIVE" &&
-        room.answersByQuestion.get(room.currentQuestionIndex)?.has(socket.id),
-    });
+    sendSnapshot(socket, room, identity);
   });
+
   socket.on("disconnect", () => {
     const room = findRoomBySocket(socket.id);
     if (!room) return;
+
     if (room.hostSocketId === socket.id) {
-      resetRoomTimer(room);
-      room.status = "FINISHED";
-      io.to(channel(room)).emit("error", {
-        message: "Host disconnected; session ended.",
+      room.hostSocketId = null;
+      room.hostDisconnectedAt = Date.now();
+      if (room.status !== "FINISHED") scheduleHostReconnect(room);
+      io.to(channel(room)).emit("room:connection", {
+        role: "host",
+        connected: false,
       });
-    } else if (room.players.has(socket.id)) {
-      room.players.get(socket.id).connected = false;
-      io.to(channel(room)).emit("player:left", { playerId: socket.id });
       broadcastState(room);
+      return;
     }
+
+    const player = findPlayerBySocket(room, socket.id);
+    if (!player) return;
+    player.socketId = null;
+    player.connected = false;
+    player.disconnectedAt = Date.now();
+    io.to(channel(room)).emit("player:left", { playerId: player.id });
+    broadcastState(room);
   });
 });
+
 const port = process.env.PORT || 3002;
 httpServer.on("error", (error) => {
   if (error.code === "EADDRINUSE") {
@@ -216,6 +389,7 @@ httpServer.on("error", (error) => {
   }
   console.error("QForge server error:", error);
 });
+
 httpServer.listen(port, () =>
   console.log(`QForge server listening on http://localhost:${port}`),
 );
