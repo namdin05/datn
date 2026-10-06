@@ -1,124 +1,125 @@
 erDiagram
-    USER ||--o{ QUIZ : creates
-    USER ||--o{ SESSION : hosts
+    USERS ||--o{ QUIZZES : creates
+    USERS ||--o{ SESSIONS : hosts
+    USERS o|--o{ PARTICIPANTS : identifies
 
-    QUIZ ||--o{ QUESTION : contains
-    QUESTION ||--o{ OPTION : has
+    QUIZZES ||--o{ QUESTIONS : contains
+    QUESTIONS ||--o{ QUESTION_OPTIONS : has
 
-    QUIZ ||--o{ SESSION : used_for
-    SESSION ||--|| SESSION_SETTING : configures
-    SESSION ||--o{ PARTICIPANT : contains
+    QUIZZES ||--o{ SESSIONS : used_for
+    SESSIONS ||--|| SESSION_SETTINGS : configures
+    SESSIONS ||--o{ PARTICIPANTS : contains
 
-    PARTICIPANT ||--o{ ATTEMPT : makes
-    ATTEMPT ||--o{ ANSWER : contains
+    PARTICIPANTS ||--o{ ATTEMPTS : makes
+    ATTEMPTS ||--o{ ANSWERS : contains
 
-    ANSWER ||--o{ ANSWER_OPTION : selects
-    OPTION ||--o{ ANSWER_OPTION : selected_as
+    ANSWERS ||--o{ ANSWER_OPTIONS : selects
+    QUESTION_OPTIONS ||--o{ ANSWER_OPTIONS : selected_as
 
-    USER {
+    USERS {
         uuid id PK
         varchar display_name
-        enum role
-        timestamp created_at
-        timestamp updated_at
+        user_role role
+        timestamptz created_at
+        timestamptz updated_at
     }
 
-    QUIZ {
+    QUIZZES {
         uuid id PK
         uuid creator_id FK
         varchar title
         text description
-        enum status
-        timestamp created_at
-        timestamp updated_at
-        timestamp published_at
+        quiz_status status
+        timestamptz published_at
+        timestamptz created_at
+        timestamptz updated_at
     }
 
-    QUESTION {
+    QUESTIONS {
         uuid id PK
         uuid quiz_id FK
-        enum type
+        question_type type
         text content
-        decimal points
+        numeric points
         int time_limit_seconds
         int position
-        timestamp created_at
-        timestamp updated_at
+        timestamptz created_at
+        timestamptz updated_at
     }
 
-    OPTION {
+    QUESTION_OPTIONS {
         uuid id PK
         uuid question_id FK
         text content
         boolean is_correct
-        int position
-        timestamp created_at
-        timestamp updated_at
+        smallint position
+        timestamptz created_at
+        timestamptz updated_at
     }
 
-    SESSION {
+    SESSIONS {
         uuid id PK
         uuid quiz_id FK
         uuid host_id FK
         varchar pin
-        enum mode
-        enum status
-        timestamp created_at
-        timestamp started_at
-        timestamp ended_at
+        session_mode mode
+        session_status status
+        timestamptz created_at
+        timestamptz started_at
+        timestamptz ended_at
     }
 
-    SESSION_SETTING {
+    SESSION_SETTINGS {
         uuid session_id PK, FK
-        enum timer_mode
+        timer_mode timer_mode
         boolean shuffle_questions
         boolean shuffle_answers
         boolean show_leaderboard
         boolean allow_skip_questions
-        int participant_attempt_limit
-        timestamp created_at
-        timestamp updated_at
+        smallint participant_attempt_limit
+        timestamptz created_at
+        timestamptz updated_at
     }
 
-    PARTICIPANT {
+    PARTICIPANTS {
         uuid id PK
         uuid session_id FK
         uuid user_id FK
         varchar nickname
-        enum status
-        timestamp joined_at
-        timestamp completed_at
+        participant_status status
+        timestamptz joined_at
+        timestamptz completed_at
     }
 
-    ATTEMPT {
+    ATTEMPTS {
         uuid id PK
         uuid participant_id FK
-        int attempt_number
-        enum status
-        timestamp started_at
-        timestamp submitted_at
-        decimal accuracy_points
-        decimal max_accuracy_points
+        smallint attempt_number
+        attempt_status status
+        timestamptz started_at
+        timestamptz submitted_at
+        numeric accuracy_points
+        numeric max_accuracy_points
         int session_score
         int correct_count
         int incorrect_count
         int answered_count
         int total_questions
-        int time_spent_ms
+        bigint time_spent_ms
     }
 
-    ANSWER {
+    ANSWERS {
         uuid id PK
         uuid attempt_id FK
         uuid question_id FK
         boolean is_correct
-        decimal accuracy_points_awarded
+        numeric accuracy_points_awarded
         int session_score_awarded
-        int response_time_ms
-        timestamp answered_at
+        bigint response_time_ms
+        timestamptz answered_at
     }
 
-    ANSWER_OPTION {
+    ANSWER_OPTIONS {
         uuid answer_id PK, FK
         uuid option_id PK, FK
     }
