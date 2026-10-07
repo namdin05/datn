@@ -1,0 +1,36 @@
+{
+  "name": "qforge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=24.13.0 <25",
+    "npm": ">=11.6.2 <12"
+  },
+  "packageManager": "npm@11.6.2",
+  "scripts": {
+    "dev": "npm run build:shared && concurrently --kill-others --names shared,be,fe \"npm run dev -w @qforge/shared\" \"npm run dev -w @qforge/backend\" \"npm run dev -w @qforge/frontend\"",
+    "dev:be": "npm run build:shared && concurrently --kill-others --names shared,be \"npm run dev -w @qforge/shared\" \"npm run dev -w @qforge/backend\"",
+    "dev:fe": "npm run build:shared && concurrently --kill-others --names shared,fe \"npm run dev -w @qforge/shared\" \"npm run dev -w @qforge/frontend\"",
+    "build:shared": "npm run build -w @qforge/shared",
+    "build": "npm run build:shared && npm run build -w @qforge/backend && npm run build -w @qforge/frontend",
+    "typecheck": "npm run build:shared && npm run typecheck --workspaces",
+    "lint": "eslint .",
+    "check": "npm run lint && npm run typecheck && npm run build",
+    "start:be": "npm run start -w @qforge/backend",
+    "preview:fe": "npm run preview -w @qforge/frontend"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^9.0.0",
+    "eslint": "^10.12.0",
+    "globals": "^16.0.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.0.0"
+  }
+}
