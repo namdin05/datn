@@ -1,0 +1,111 @@
+BEGIN;
+
+-- Fixed UUIDs make the demo dataset predictable across environments.
+INSERT INTO users (id, display_name, role) VALUES
+('00000000-0000-0000-0000-000000000001', 'Demo Teacher', 'TEACHER'),
+('00000000-0000-0000-0000-000000000002', 'Demo Student', 'STUDENT');
+
+INSERT INTO quizzes (
+    id, creator_id, title, description, status, published_at
+) VALUES (
+    '10000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000001',
+    'Wayground MVP Demo Quiz',
+    'Seed data for the end-to-end MVP flow.',
+    'PUBLISHED',
+    now()
+);
+
+INSERT INTO questions (
+    id, quiz_id, type, content, points, time_limit_seconds, position
+) VALUES
+(
+    '20000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000001',
+    'MULTIPLE_CHOICE',
+    'What is 2 + 2?',
+    1,
+    20,
+    1
+),
+(
+    '20000000-0000-0000-0000-000000000002',
+    '10000000-0000-0000-0000-000000000001',
+    'MULTIPLE_CHOICE',
+    'Select all prime numbers below.',
+    2,
+    30,
+    2
+),
+(
+    '20000000-0000-0000-0000-000000000003',
+    '10000000-0000-0000-0000-000000000001',
+    'MULTIPLE_CHOICE',
+    'Which protocol is commonly used for realtime bidirectional web communication?',
+    1,
+    25,
+    3
+);
+
+INSERT INTO question_options (id, question_id, content, is_correct, position) VALUES
+('30000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000001','3',FALSE,1),
+('30000000-0000-0000-0000-000000000002','20000000-0000-0000-0000-000000000001','4',TRUE,2),
+('30000000-0000-0000-0000-000000000003','20000000-0000-0000-0000-000000000001','5',FALSE,3),
+
+('30000000-0000-0000-0000-000000000004','20000000-0000-0000-0000-000000000002','2',TRUE,1),
+('30000000-0000-0000-0000-000000000005','20000000-0000-0000-0000-000000000002','3',TRUE,2),
+('30000000-0000-0000-0000-000000000006','20000000-0000-0000-0000-000000000002','4',FALSE,3),
+('30000000-0000-0000-0000-000000000007','20000000-0000-0000-0000-000000000002','5',TRUE,4),
+
+('30000000-0000-0000-0000-000000000008','20000000-0000-0000-0000-000000000003','HTTP polling only',FALSE,1),
+('30000000-0000-0000-0000-000000000009','20000000-0000-0000-0000-000000000003','WebSocket',TRUE,2),
+('30000000-0000-0000-0000-000000000010','20000000-0000-0000-0000-000000000003','FTP',FALSE,3);
+
+INSERT INTO sessions (
+    id, quiz_id, host_id, pin, mode, status
+) VALUES (
+    '40000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000001',
+    '123456',
+    'CLASSIC',
+    'WAITING'
+);
+
+INSERT INTO session_settings (
+    session_id,
+    timer_mode,
+    shuffle_questions,
+    shuffle_answers,
+    show_leaderboard,
+    allow_skip_questions,
+    participant_attempt_limit
+) VALUES (
+    '40000000-0000-0000-0000-000000000001',
+    'ON_ALLOW_AFTER_TIMEOUT',
+    FALSE,
+    FALSE,
+    TRUE,
+    TRUE,
+    2
+);
+
+INSERT INTO participants (
+    id, session_id, user_id, nickname, status
+) VALUES
+(
+    '50000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000002',
+    'Student A',
+    'JOINED'
+),
+(
+    '50000000-0000-0000-0000-000000000002',
+    '40000000-0000-0000-0000-000000000001',
+    NULL,
+    'Guest B',
+    'JOINED'
+);
+
+COMMIT;
