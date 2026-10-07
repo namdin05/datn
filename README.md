@@ -1,3 +1,83 @@
+# QForge — Demo workspace
+
+Code demo được tổ chức trong một npm workspace:
+
+```text
+frontend/       React + Vite + TypeScript + Tailwind + Router
+backend/        Express + TypeScript, REST API
+shared/         Public DTO và Zod response schemas
+database/       SQL/schema hiện có; migrations/seed ở bước tiếp theo
+docs/           Baseline, tiến độ setup và tài liệu database
+landing_page/   Trang tài liệu nghiên cứu hiện có
+```
+
+Hộp/Bảo hoàn thiện FE/BE; Nam/Lâm gắn realtime sau bàn giao. Business services và FE gateway ở các bước tiếp theo sẽ tách khỏi transport để dùng lại khi nối socket.
+
+## Chạy local
+
+Yêu cầu Node **24.13.0**, npm **11.6.2**; các version được kiểm tra ở checkpoint setup hiện tại. Nếu dùng nvm:
+
+```sh
+nvm install
+nvm use
+npm install --global npm@11.6.2
+```
+
+Trong root repo `datn/`:
+
+```sh
+npm ci
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+npm run dev
+```
+
+- FE: `http://127.0.0.1:5173`.
+- Trang kiểm tra kết nối: `http://127.0.0.1:5173/setup`; nhấn **Kiểm tra kết nối**.
+- BE liveness: `http://127.0.0.1:3002/health`.
+
+`npm run dev` build shared lần đầu, sau đó watch shared/BE/FE cùng lúc. Khi một process dừng, các process còn lại cũng dừng. `dev:fe` hoặc `dev:be` chạy riêng app tương ứng và shared watcher.
+
+## Kiểm tra và build
+
+```sh
+npm run check
+npm run start:be
+```
+
+`check` chạy lint, typecheck và build theo thứ tự shared → BE → FE. `start:be` chạy BE đã build; `preview:fe` serve FE build ở cổng 4173. Khi kiểm tra kết nối bằng preview, thêm origin `http://127.0.0.1:4173` vào `backend/.env` và restart BE.
+
+BE đọc `backend/.env`. FE đọc `frontend/.env`; restart Vite khi đổi env. Dùng `HOST=0.0.0.0` và PORT do hosting cấp khi deploy BE; cấu hình FRONTEND_ORIGINS theo URL FE thật. FE dùng VITE_API_URL của BE khi build. Chỉ public config được đặt trong VITE_*; .env thật được Git ignore.
+
+Nếu cổng 3002/5173 đã được dùng, dừng process cũ hoặc đổi cổng; cập nhật API URL/origin tương ứng. Shared output không commit; các lệnh dev/build/check ở root tự build package này. Cài dependency từ root bằng `npm install <package> -w @qforge/frontend` hoặc workspace BE/shared tương ứng.
+
+## Checkpoint hiện tại
+
+- Workspace, scripts, shared response contract, Express health/error handling và React routes ban đầu đã được dựng.
+- Teacher/Student pages hiện là placeholder. `/setup` là trang kiểm tra dành cho development.
+- Chưa kết nối DB, chưa có authentication, Quiz/Session API, gateway nghiệp vụ, migration/seed runner hoặc Socket.IO.
+- `/health` chỉ kiểm tra HTTP server sống, **không xác nhận database sẵn sàng**. `/ready` sẽ được thêm khi có DB.
+- CI được cấu hình cho lint/typecheck/build; chưa chạy trên GitHub cho đến khi code được push.
+
+Theo dõi [baseline và các điểm cần xác nhận](docs/mvp-decisions.md) và [checkpoint triển khai](docs/setup-progress.md). Bước tiếp theo: hoàn thiện BE foundation/FE components, sau đó DB/auth theo lựa chọn được chốt.
+
+## Các file config cần đọc khi bắt đầu
+
+| File | Vai trò |
+|---|---|
+| [package.json](package.json) | Workspaces, scripts, dependencies và phiên bản môi trường được phép |
+| [.nvmrc](.nvmrc) | Phiên bản Node đã chọn; dùng với nvm install/nvm use |
+| [.npmrc](.npmrc) | Bật kiểm tra engines khi cài dependencies |
+| [.editorconfig](.editorconfig) | Thống nhất UTF-8, LF, indent 2 spaces và quy ước lưu file |
+| [eslint.config.mjs](eslint.config.mjs) | Quy tắc lint cho TS/React/Node và phạm vi file được kiểm tra |
+| [.github/workflows/ci.yml](.github/workflows/ci.yml) | GitHub chạy npm ci và npm run check khi push/PR |
+
+Commit source code, config dùng chung, lockfile, `.env.example` và tài liệu nhóm. Giữ `.env` thật, credentials, node_modules, dist, logs và ghi chú cá nhân ở local. `.npmrc` hiện chỉ có `engine-strict=true`; token registry nếu cần phải được cấu hình riêng, không ghi vào file repo.
+
+## Tài liệu nghiên cứu trước demo
+
+Phần dưới lưu mô tả trang knowledge/proposal trước đây; scope QForge demo theo baseline ở trên. Các đường dẫn trang web nằm trong `landing_page/`.
+
 # Intelligent Assessment — Knowledge page
 
 Trang tài liệu nội bộ tiếng Việt, diễn giải từ đặc tả `proposal-spec.md`.

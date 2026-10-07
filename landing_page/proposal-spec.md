@@ -2993,7 +2993,7 @@ Thesis + Demo
 
 # 89. Proposal Landing Page Structure
 
-Codex nên dựng proposal page theo structure sau.
+Nhóm phát triển nên dựng proposal page theo structure sau.
 
 ---
 
@@ -3267,7 +3267,7 @@ Final
 
 ---
 
-# 100. UI / UX Direction for Codex
+# 100. UI / UX Direction for the Development Team
 
 Không làm UI theo phong cách:
 
@@ -3405,9 +3405,9 @@ Footer
 
 ---
 
-# 106. Codex Requirements
+# 106. Development Team Requirements
 
-Codex cần:
+Nhóm phát triển cần:
 
 1. Đọc toàn bộ file này.
 2. Không tự thêm feature ngoài scope nếu không cần.
