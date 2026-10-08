@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch --include '../shared/dist/**/*.js' src/server.ts",
     "build": "tsc",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "test": "node --import tsx --test test/*.test.ts",
     "start": "node dist/server.js"
   },
   "dependencies": {

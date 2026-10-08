@@ -1,31 +1,42 @@
 import type { ErrorRequestHandler } from "express";
+import { ApiError } from "../common/api-error.js";
+import { sendFailure } from "../common/response.js";
 
-export const errorHandler: ErrorRequestHandler = (error: unknown, _request, response, next) => {
-  if (response.headersSent) {
-    next(error);
-    return;
+export type ErrorLogger = (error: unknown) => void;
+
+function bodyParserError(error: unknown): ApiError | undefined {
+  if (!error || typeof error !== "object" || !("type" in error) || !("status" in error)) {
+    return undefined;
   }
 
-  const errorType = error && typeof error === "object" && "type" in error
-    ? error.type : undefined;
-  if (errorType === "entity.parse.failed") {
-    response.status(400).json({
-      success: false,
-      error: { code: "INVALID_JSON", message: "Request body must be valid JSON." },
-    });
-    return;
+  if (error.type === "entity.parse.failed" && error.status === 400) {
+    return new ApiError("INVALID_JSON");
   }
-  if (errorType === "entity.too.large") {
-    response.status(413).json({
-      success: false,
-      error: { code: "PAYLOAD_TOO_LARGE", message: "Request body exceeds the size limit." },
-    });
-    return;
+  if (error.type === "entity.too.large" && error.status === 413) {
+    return new ApiError("PAYLOAD_TOO_LARGE");
   }
+  if ((error.type === "charset.unsupported" || error.type === "encoding.unsupported") && error.status === 415) {
+    return new ApiError("UNSUPPORTED_MEDIA_TYPE");
+  }
+  return undefined;
+}
 
+export function createErrorHandler(logError: ErrorLogger = (error) => {
   console.error("Unhandled request error", error);
-  response.status(500).json({
-    success: false,
-    error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred." },
-  });
-};
+}): ErrorRequestHandler {
+  return (error: unknown, _request, response, next) => {
+    if (response.headersSent) {
+      next(error);
+      return;
+    }
+
+    const knownError = error instanceof ApiError ? error : bodyParserError(error);
+    if (knownError && knownError.statusCode < 500) {
+      sendFailure(response, knownError);
+      return;
+    }
+
+    logError(error);
+    sendFailure(response, new ApiError("INTERNAL_ERROR"));
+  };
+}

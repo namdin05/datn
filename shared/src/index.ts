@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export type ApiSuccess<T> = { success: true; data: T };
-export type ApiFailure = {
-  success: false;
-  error: { code: string; message: string };
-};
-export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
+export * from "./api.js";
 
 export const healthResponseSchema = z.object({
   success: z.literal(true),

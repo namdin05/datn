@@ -21,7 +21,8 @@
     "build": "npm run build:shared && npm run build -w @qforge/backend && npm run build -w @qforge/frontend",
     "typecheck": "npm run build:shared && npm run typecheck --workspaces",
     "lint": "eslint .",
-    "check": "npm run lint && npm run typecheck && npm run build",
+    "test": "npm run build:shared && npm run test -w @qforge/backend",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "start:be": "npm run start -w @qforge/backend",
     "preview:fe": "npm run preview -w @qforge/frontend"
   },
