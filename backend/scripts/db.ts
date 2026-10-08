@@ -126,7 +126,7 @@ try {
         if (!(await repo.quizzes.findById(draft.id))) throw new Error('REPOSITORY_WRITE_FAILED');
         await client.query('ROLLBACK');
         if ((await client.query('SELECT id FROM public.quizzes WHERE id=$1',[draft.id])).rowCount) throw new Error('ROLLBACK_FAILED');
-        const server = createApp(readEnv(), pool).listen(0,'127.0.0.1');
+        const server = createApp(readEnv(), { db: pool }).listen(0,'127.0.0.1');
         try {
           await new Promise<void>((resolve,reject) => { server.once('listening',resolve); server.once('error',reject); });
           const address = server.address();

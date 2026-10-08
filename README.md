@@ -6,7 +6,7 @@ Code demo được tổ chức trong một npm workspace:
 frontend/       React + Vite + TypeScript + Tailwind + Router
 backend/        Express + TypeScript, REST API
 shared/         Public DTO và Zod response schemas
-database/       SQL/schema hiện có; migrations/seed ở bước tiếp theo
+database/       SQL/schema, migrations và seeds
 docs/           Baseline, tiến độ setup và tài liệu database
 landing_page/   Trang tài liệu nghiên cứu hiện có
 ```
@@ -15,7 +15,7 @@ Hộp/Bảo hoàn thiện FE/BE; Nam/Lâm gắn realtime sau bàn giao. Business
 
 ## Chạy local
 
-Yêu cầu Node **24.13.0**, npm **11.6.2**; các version được kiểm tra ở checkpoint setup hiện tại. Nếu dùng nvm:
+Yêu cầu Node **24.15.0**, npm **11.6.2**. Node được nâng từ 24.13.0 để đáp ứng engines của dependencies test FE; `.npmrc` vẫn bật kiểm tra engines. Nếu dùng nvm:
 
 ```sh
 nvm install
@@ -35,6 +35,7 @@ npm run dev
 - FE: `http://127.0.0.1:5173`.
 - Trang kiểm tra kết nối: `http://127.0.0.1:5173/setup`; nhấn **Kiểm tra kết nối**.
 - BE liveness: `http://127.0.0.1:3002/health`.
+- BE readiness: `http://127.0.0.1:3002/ready`; trả 503 khi chưa cấu hình hoặc chưa kết nối được DB. Cấu hình DB theo [hướng dẫn S04](docs/database-setup.md).
 
 `npm run dev` build shared lần đầu, sau đó watch shared/BE/FE cùng lúc. Khi một process dừng, các process còn lại cũng dừng. `dev:fe` hoặc `dev:be` chạy riêng app tương ứng và shared watcher.
 
@@ -45,7 +46,7 @@ npm run check
 npm run start:be
 ```
 
-`check` chạy lint, typecheck và build theo thứ tự shared → BE → FE. `start:be` chạy BE đã build; `preview:fe` serve FE build ở cổng 4173. Khi kiểm tra kết nối bằng preview, thêm origin `http://127.0.0.1:4173` vào `backend/.env` và restart BE.
+`check` chạy lint, typecheck, 27 HTTP tests cho BE, smoke test FE và build shared → BE → FE. `npm test` build shared rồi chạy test scripts của các workspace; không cần DB thật. Kiểm thử PostgreSQL/FE đọc DB thật chạy riêng theo [hướng dẫn S04](docs/database-setup.md) và [README FE](frontend/README.md). `start:be` chạy BE đã build; `preview:fe` serve FE build ở cổng 4173. Khi kiểm tra kết nối bằng preview, thêm origin `http://127.0.0.1:4173` vào `backend/.env` và restart BE.
 
 BE đọc `backend/.env`. FE đọc `frontend/.env`; restart Vite khi đổi env. Dùng `HOST=0.0.0.0` và PORT do hosting cấp khi deploy BE; cấu hình FRONTEND_ORIGINS theo URL FE thật. FE dùng VITE_API_URL của BE khi build. Chỉ public config được đặt trong VITE_*; .env thật được Git ignore.
 
@@ -53,13 +54,13 @@ Nếu cổng 3002/5173 đã được dùng, dừng process cũ hoặc đổi c�
 
 ## Checkpoint hiện tại
 
-- Workspace, scripts, shared response contract, Express health/error handling và React routes ban đầu đã được dựng.
-- Teacher/Student pages hiện là placeholder. `/setup` là trang kiểm tra dành cho development.
-- Chưa kết nối DB, chưa có authentication, Quiz/Session API, gateway nghiệp vụ, migration/seed runner hoặc Socket.IO.
-- `/health` chỉ kiểm tra HTTP server sống, **không xác nhận database sẵn sàng**. `/ready` sẽ được thêm khi có DB.
-- CI được cấu hình cho lint/typecheck/build; chưa chạy trên GitHub cho đến khi code được push.
+- Workspace, scripts, shared response contract, Express health/error handling và React routes ban đầu đã được dựng. S03 bổ sung ApiError, response helpers và Zod validation cho body/params/query.
+- Đã ghép nền DB/FE của team: PostgreSQL pool, migration/seed runner, repositories, layouts/components và API đọc dữ liệu. `/setup` là trang kiểm tra dành cho development.
+- API Teacher `/api/dev/*` dùng actor demo và không mount trong production. Auth, API ghi nghiệp vụ, session gateway hoàn chỉnh và Socket.IO chưa được triển khai.
+- `/health` chỉ kiểm tra HTTP server sống; `/ready` chạy `SELECT 1` để kiểm tra kết nối DB, **không xác nhận đầy đủ migrations/seed hoặc nghiệp vụ**.
+- CI gọi `npm ci` và `npm run check`, bao gồm tests BE/FE. Xem kết quả theo branch/PR trên GitHub Checks.
 
-Theo dõi [baseline và các điểm cần xác nhận](docs/mvp-decisions.md) và [checkpoint triển khai](docs/setup-progress.md). Bước tiếp theo: hoàn thiện BE foundation/FE components, sau đó DB/auth theo lựa chọn được chốt.
+Đọc [hướng dẫn S03: response, validation và module BE](docs/backend-foundation.md), [baseline và các điểm cần xác nhận](docs/mvp-decisions.md) và [checkpoint triển khai](docs/setup-progress.md). Bước tiếp theo: xác minh trên DB phát triển, chốt DTO/gateway ở S06 và auth ở S07.
 
 ## Các file config cần đọc khi bắt đầu
 

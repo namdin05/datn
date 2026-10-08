@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 config({path:fileURLToPath(new URL('../../backend/.env',import.meta.url)),quiet:true});
 const pool=createDb();
-const server=createApp({...readEnv(),NODE_ENV:'test'},pool).listen(0,'127.0.0.1');
+const server=createApp({...readEnv(),NODE_ENV:'test'},{db:pool}).listen(0,'127.0.0.1');
 await new Promise<void>((resolve,reject)=>{server.once('listening',resolve);server.once('error',reject);});
 const addr=server.address();assert.ok(addr&&typeof addr!=='string');
 const base=`http://127.0.0.1:${addr.port}`;

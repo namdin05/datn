@@ -7,13 +7,14 @@
     "db:check": "tsx scripts/db.ts check",
     "dev": "tsx watch --include '../shared/dist/**/*.js' src/server.ts",
     "build": "tsc",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
     "start": "node dist/server.js",
     "db:status": "tsx scripts/db.ts status",
     "db:migrate": "tsx scripts/db.ts migrate",
     "db:baseline": "tsx scripts/db.ts baseline",
     "db:seed": "tsx scripts/db.ts seed",
-    "db:test": "tsx scripts/db.ts test"
+    "db:test": "tsx scripts/db.ts test",
+    "test": "node --import tsx --test test/*.test.ts"
   },
   "dependencies": {
     "@qforge/shared": "*",

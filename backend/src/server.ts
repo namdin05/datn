@@ -8,7 +8,7 @@ import { createDb } from './config/db.js';
 try {
   const config = readEnv();
   const db = process.env.DATABASE_URL ? createDb() : undefined;
-  const server = createServer(createApp(config, db));
+  const server = createServer(createApp(config, { db }));
   server.on("error", (error: NodeJS.ErrnoException) => {
     console.error(`Server failed to start: ${error.code ?? "UNKNOWN"}`);
     process.exitCode = 1;

@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export type ApiSuccess<T> = { success: true; data: T };
-export type ApiFailure = {
-  success: false;
-  error: { code: string; message: string };
-};
-export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
+export * from "./api.js";
 
 export const healthResponseSchema = z.object({
   success: z.literal(true),
@@ -16,6 +11,13 @@ export const healthResponseSchema = z.object({
 });
 
 export type HealthResponse = z.infer<typeof healthResponseSchema>;
+
+export const readyResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({ status: z.literal("ready"), database: z.literal("ok") }),
+});
+
+export type ReadyResponse = z.infer<typeof readyResponseSchema>;
 
 export const dbOptionSchema = z.object({ id: z.guid(), content: z.string(), position: z.number(), isCorrect: z.boolean() });
 export const dbQuestionSchema = z.object({ id: z.guid(), content: z.string(), position: z.number(), points: z.number(), options: z.array(dbOptionSchema) });
