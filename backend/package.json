@@ -4,23 +4,31 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "db:check": "tsx scripts/db.ts check",
     "dev": "tsx watch --include '../shared/dist/**/*.js' src/server.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
-    "test": "node --import tsx --test test/*.test.ts",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "db:status": "tsx scripts/db.ts status",
+    "db:migrate": "tsx scripts/db.ts migrate",
+    "db:baseline": "tsx scripts/db.ts baseline",
+    "db:seed": "tsx scripts/db.ts seed",
+    "db:test": "tsx scripts/db.ts test",
+    "test": "node --import tsx --test test/*.test.ts"
   },
   "dependencies": {
     "@qforge/shared": "*",
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
     "express": "5.2.1",
+    "pg": "^8.23.1",
     "zod": "4.6.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.0",
     "@types/express": "^5.0.0",
     "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
     "tsx": "^4.0.0"
   }
 }

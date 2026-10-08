@@ -9,6 +9,7 @@ export const apiErrorCodeSchema = z.enum([
   "CONFLICT",
   "PAYLOAD_TOO_LARGE",
   "UNSUPPORTED_MEDIA_TYPE",
+  "DB_UNAVAILABLE",
   "INTERNAL_ERROR",
 ]);
 

@@ -2,9 +2,10 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { test } from "node:test";
 import type { TestContext } from "node:test";
-import { apiFailureSchema, createApiResponseSchema, healthResponseSchema } from "@qforge/shared";
+import { apiFailureSchema, createApiResponseSchema, healthResponseSchema, publicRoomSchema, readyResponseSchema } from "@qforge/shared";
 import { Router } from "express";
 import type { ErrorRequestHandler } from "express";
+import { Pool } from "pg";
 import { z } from "zod";
 import { createApp } from "../src/app.js";
 import { ApiError } from "../src/common/api-error.js";
@@ -13,9 +14,13 @@ import { readEnv } from "../src/config/env.js";
 import { validateRequest } from "../src/middleware/validate.js";
 import type { ValidatedRequestHandler } from "../src/middleware/validate.js";
 
-async function startApp(context: TestContext, router = Router()) {
+async function startApp(context: TestContext, router = Router(), options: {
+  db?: Pool;
+  mode?: "test" | "production";
+} = {}) {
   const errors: unknown[] = [];
-  const app = createApp(readEnv({ NODE_ENV: "test" }), {
+  const app = createApp(readEnv({ NODE_ENV: options.mode ?? "test" }), {
+    db: options.db,
     apiRouter: router,
     errorLogger: (error) => errors.push(error),
   });
@@ -36,6 +41,97 @@ async function startApp(context: TestContext, router = Router()) {
 function jsonPost(body: unknown): RequestInit {
   return { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
 }
+
+function stubDb(context: TestContext, query: (...args: unknown[]) => Promise<unknown>) {
+  const pool = new Pool();
+  context.after(() => pool.end());
+  const mock = context.mock.method(pool, "query", query);
+  return { pool, mock };
+}
+
+test("readiness without DB returns a shared 503 while health remains live", async (context) => {
+  const { url, errors } = await startApp(context);
+  const response = await fetch(`${url}/ready`);
+  assert.equal(response.status, 503);
+  assert.deepEqual(apiFailureSchema.parse(await response.json()), {
+    success: false, error: { code: "DB_UNAVAILABLE", message: "Database is unavailable." },
+  });
+  const health = await fetch(`${url}/health`);
+  assert.equal(health.status, 200);
+  healthResponseSchema.parse(await health.json());
+  assert.equal(errors.length, 0);
+});
+
+test("readiness queries the injected DB and follows its shared success contract", async (context) => {
+  const { pool, mock } = stubDb(context, async () => ({ rows: [] }));
+  const { url } = await startApp(context, Router(), { db: pool });
+  const response = await fetch(`${url}/ready`);
+  assert.equal(response.status, 200);
+  readyResponseSchema.parse(await response.json());
+  assert.deepEqual(mock.mock.calls[0]?.arguments, ["SELECT 1"]);
+});
+
+test("readiness hides DB failures and preserves the 503 code", async (context) => {
+  const { pool } = stubDb(context, async () => { throw new Error("private DB connection string"); });
+  const { url } = await startApp(context, Router(), { db: pool });
+  const response = await fetch(`${url}/ready`);
+  assert.equal(response.status, 503);
+  assert.deepEqual(await response.json(), {
+    success: false, error: { code: "DB_UNAVAILABLE", message: "Database is unavailable." },
+  });
+});
+
+for (const [path, field] of [["/api/dev/quizzes/not-a-guid", "id"], ["/api/dev/sessions/not-a-guid", "id"], ["/api/rooms/bad", "pin"]] as const) {
+  test(`${path} rejects invalid params before querying DB`, async (context) => {
+    const { pool, mock } = stubDb(context, async () => { throw new Error("DB must not be queried"); });
+    const { url } = await startApp(context, Router(), { db: pool });
+    const response = await fetch(`${url}${path}`);
+    assert.equal(response.status, 400);
+    const failure = apiFailureSchema.parse(await response.json());
+    assert.equal(failure.error.code, "INVALID_INPUT");
+    assert.equal(failure.error.details?.[0]?.source, "params");
+    assert.equal(failure.error.details?.[0]?.field, field);
+    assert.equal(mock.mock.callCount(), 0);
+  });
+}
+
+test("a missing room uses NOT_FOUND instead of the invalid-input code", async (context) => {
+  const { pool, mock } = stubDb(context, async () => ({ rows: [] }));
+  const { url } = await startApp(context, Router(), { db: pool });
+  const response = await fetch(`${url}/api/rooms/123456`);
+  assert.equal(response.status, 404);
+  assert.equal(apiFailureSchema.parse(await response.json()).error.code, "NOT_FOUND");
+  assert.deepEqual(mock.mock.calls[0]?.arguments[1], ["123456"]);
+});
+
+test("public room metadata keeps its FE contract and maps DB status", async (context) => {
+  const { pool } = stubDb(context, async () => ({ rows: [{ title: "Demo", pin: "123456", status: "IN_PROGRESS", participantCount: 2 }] }));
+  const { url } = await startApp(context, Router(), { db: pool });
+  const response = await fetch(`${url}/api/rooms/123456`);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body, { success: true, data: { title: "Demo", pin: "123456", status: "ACTIVE", participantCount: 2 } });
+  createApiResponseSchema(publicRoomSchema).parse(body);
+});
+
+test("production does not mount demo Teacher routes even with DB configured", async (context) => {
+  const { pool, mock } = stubDb(context, async () => { throw new Error("DB must not be queried"); });
+  const { url } = await startApp(context, Router(), { db: pool, mode: "production" });
+  const response = await fetch(`${url}/api/dev/dashboard`);
+  assert.equal(response.status, 404);
+  assert.equal(apiFailureSchema.parse(await response.json()).error.code, "NOT_FOUND");
+  assert.equal(mock.mock.callCount(), 0);
+});
+
+test("DB read failures go through the shared internal-error handler", async (context) => {
+  const failure = new Error("private SQL and credentials");
+  const { pool } = stubDb(context, async () => { throw failure; });
+  const { url, errors } = await startApp(context, Router(), { db: pool });
+  const response = await fetch(`${url}/api/dev/dashboard`);
+  assert.equal(response.status, 500);
+  assert.deepEqual(await response.json(), { success: false, error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred." } });
+  assert.deepEqual(errors, [failure]);
+});
 
 test("health keeps its contract and only allows configured CORS origins", async (context) => {
   const { url } = await startApp(context);

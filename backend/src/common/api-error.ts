@@ -9,6 +9,7 @@ const definitions = {
   CONFLICT: { status: 409, message: "This action conflicts with the current state." },
   PAYLOAD_TOO_LARGE: { status: 413, message: "Request body exceeds the size limit." },
   UNSUPPORTED_MEDIA_TYPE: { status: 415, message: "Request body encoding is not supported." },
+  DB_UNAVAILABLE: { status: 503, message: "Database is unavailable." },
   INTERNAL_ERROR: { status: 500, message: "An unexpected error occurred." },
 } satisfies Record<ApiErrorCode, { status: number; message: string }>;
 

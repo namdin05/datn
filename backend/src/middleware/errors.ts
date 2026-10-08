@@ -31,7 +31,7 @@ export function createErrorHandler(logError: ErrorLogger = (error) => {
     }
 
     const knownError = error instanceof ApiError ? error : bodyParserError(error);
-    if (knownError && knownError.statusCode < 500) {
+    if (knownError && knownError.code !== "INTERNAL_ERROR") {
       sendFailure(response, knownError);
       return;
     }

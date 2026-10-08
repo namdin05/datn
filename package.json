@@ -9,7 +9,7 @@
     "frontend"
   ],
   "engines": {
-    "node": ">=24.13.0 <25",
+    "node": ">=24.15.0 <25",
     "npm": ">=11.6.2 <12"
   },
   "packageManager": "npm@11.6.2",
@@ -21,10 +21,16 @@
     "build": "npm run build:shared && npm run build -w @qforge/backend && npm run build -w @qforge/frontend",
     "typecheck": "npm run build:shared && npm run typecheck --workspaces",
     "lint": "eslint .",
-    "test": "npm run build:shared && npm run test -w @qforge/backend",
+    "test": "npm run build:shared && npm run test --workspaces --if-present",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "start:be": "npm run start -w @qforge/backend",
-    "preview:fe": "npm run preview -w @qforge/frontend"
+    "preview:fe": "npm run preview -w @qforge/frontend",
+    "db:check": "npm run db:check -w @qforge/backend",
+    "db:status": "npm run db:status -w @qforge/backend",
+    "db:migrate": "npm run db:migrate -w @qforge/backend",
+    "db:baseline": "npm run db:baseline -w @qforge/backend",
+    "db:seed": "npm run db:seed -w @qforge/backend",
+    "db:test": "npm run db:test -w @qforge/backend"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

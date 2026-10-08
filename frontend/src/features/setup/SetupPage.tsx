@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { fetchHealth } from "../../lib/api";
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
+import { PageState } from '../../components/PageState';
 
 export function SetupPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "online" | "offline">("idle");
@@ -20,19 +23,19 @@ export function SetupPage() {
   }
 
   return (
-    <section className="panel max-w-2xl space-y-6">
+    <Card className="setup-panel max-w-2xl space-y-6">
       <div className="space-y-3">
         <p className="eyebrow">Kiểm tra môi trường phát triển</p>
         <h1>Kết nối FE ↔ BE</h1>
-        <p className="description">Trang này kiểm tra HTTP API và response contract dùng chung. Database, auth và các màn nghiệp vụ sẽ được triển khai ở các bước tiếp theo.</p>
+        <p className="description">Kiểm tra kết nối HTTP giữa frontend và backend. Kết nối database được kiểm tra riêng tại endpoint /ready của backend.</p>
       </div>
-      <p role="status" className={status === "offline" ? "text-red-700" : status === "online" ? "text-emerald-700" : "text-slate-600"}>{message}</p>
+      <PageState kind={status === 'loading' ? 'loading' : status === 'offline' ? 'error' : 'empty'} title={status === 'online' ? 'API sẵn sàng' : status === 'offline' ? 'Không thể kết nối API' : status === 'loading' ? 'Đang kiểm tra' : 'Chưa kiểm tra kết nối'} description={message} />
       <div className="flex flex-wrap items-center gap-4">
-        <button className="button" disabled={status === "loading"} onClick={() => { void checkConnection(); }}>
+        <Button disabled={status === "loading"} aria-busy={status === 'loading'} onClick={() => { void checkConnection(); }}>
           {status === "loading" ? "Đang kiểm tra…" : "Kiểm tra kết nối"}
-        </button>
-        <Link className="text-sm text-slate-600 underline" to="/">Về trang chủ</Link>
+        </Button>
+        <Button variant="secondary" asChild><Link to="/">Về trang chủ</Link></Button>
       </div>
-    </section>
+    </Card>
   );
 }
