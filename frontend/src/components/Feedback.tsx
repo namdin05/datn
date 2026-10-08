@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { Button } from './ui/button';
 
 export function notifySuccess(message: string) {
   window.dispatchEvent(new CustomEvent('qforge-toast', { detail: message }));
@@ -18,5 +19,5 @@ export function ActionButton({ children, onClick, disabled = false, className = 
       await onClick();
     } finally { running.current = false; setPending(false); }
   }
-  return <button type="button" className={className} disabled={disabled || pending} aria-busy={pending} onClick={() => { void run(); }}>{pending && <span className="button-spinner" aria-hidden="true" />}{pending ? 'Đang xử lý…' : children}</button>;
+  return <Button className={className} disabled={disabled || pending} aria-busy={pending} onClick={() => { void run(); }}>{pending && <span className="button-spinner" aria-hidden="true" />}{pending ? 'Đang xử lý…' : children}</Button>;
 }

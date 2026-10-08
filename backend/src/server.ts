@@ -3,10 +3,12 @@ import { createServer } from "node:http";
 import { ZodError } from "zod";
 import { createApp } from "./app.js";
 import { readEnv } from "./config/env.js";
+import { createDb } from './config/db.js';
 
 try {
   const config = readEnv();
-  const server = createServer(createApp(config));
+  const db = process.env.DATABASE_URL ? createDb() : undefined;
+  const server = createServer(createApp(config, db));
   server.on("error", (error: NodeJS.ErrnoException) => {
     console.error(`Server failed to start: ${error.code ?? "UNKNOWN"}`);
     process.exitCode = 1;
@@ -18,7 +20,8 @@ try {
   const shutdown = () => {
     const timeout = setTimeout(() => process.exit(1), 10_000);
     timeout.unref();
-    server.close(() => {
+    server.close(async () => {
+      await db?.end();
       clearTimeout(timeout);
       process.exit(0);
     });

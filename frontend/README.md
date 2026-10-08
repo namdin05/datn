@@ -1,19 +1,38 @@
-# QForge frontend demo
+# QForge frontend
 
-Giao diện dựa trên 7 frame trong Figma `demoB`: Welcome/PIN, đăng nhập/đăng ký, Teacher dashboard, quiz editor, Teacher live, Student lobby và Student question. Có thêm kết quả và báo cáo để hoàn tất flow.
+Frontend dùng React/Vite/TypeScript, Tailwind và Router, giữ tông kem/cam theo mẫu demoB. Layout dùng chung ở `src/app/layouts/`, Button/Input/Card ở `src/components/ui/`. PageState/ErrorBoundary phục vụ loading/error/empty và lỗi render.
 
-Chạy từ root repo bằng `npm run dev:fe` (PowerShell dùng `npm.cmd run dev:fe` nếu execution policy chặn npm.ps1). Mở http://127.0.0.1:5173.
+## Chạy ứng dụng
 
-1. Đăng nhập với email và mật khẩu demo bất kỳ từ 6 ký tự. Không nhập thông tin thật; không có xác thực Supabase ở giai đoạn này.
-2. Tạo/chỉnh sửa câu hỏi; xuất bản sau khi đủ nội dung, 4 lựa chọn và một đáp án đúng.
-3. Bắt đầu phiên để nhận PIN. Mở cổng sinh viên trong tab khác cùng browser profile và nhập PIN + tên.
-4. Teacher bắt đầu, chuyển câu; Student gửi đáp án một lần. Kết thúc để xem result/report (đúng 100, sai 0; chưa trả lời riêng).
-5. Refresh giữ state. Đề đang có phiên mở bị khóa sửa/xóa. Phiên giữ bản chụp đề tại lúc tạo.
+Từ thư mục gốc:
 
-`src/lib/demo.ts` là gateway dữ liệu demo localStorage; state đồng bộ giữa tab bằng storage events. Teacher/participant identity lưu sessionStorage. Đây không phải xác thực, bảo vệ đáp án hay realtime qua mạng. Dữ liệu/đáp án demo có thể đọc trong browser. Các thiết bị khác không chia sẻ phiên; chưa có API nghiệp vụ hoặc Socket.IO.
+```powershell
+npm.cmd ci
+npm.cmd run dev
+```
 
-Khi tích hợp BE, thay demo gateway bằng REST/session gateway với actor và DTO theo contract, để server validate/quản lý state/chấm điểm. Giữ `/setup` để kiểm tra `/health` hiện có. Auth thật, socket/reconnect mạng và quyền dữ liệu cần triển khai ở bước tích hợp.
+Mở http://127.0.0.1:5173/teacher/quizzes để xem Teacher mẫu trong DB. Backend đọc `backend/.env`; FE dùng `VITE_API_URL` trong `frontend/.env` (mặc định http://127.0.0.1:3002). Không đưa credentials DB vào frontend.
 
-Kiểm tra từ root: `npm run check`.
+## Đọc dữ liệu thật
 
-Đã kiểm tra local: lint/typecheck/build; tạo đề và chặn publish khi thiếu câu/đáp án; publish và host; Student join ở tab thứ hai; start và đồng bộ câu hỏi; submit cập nhật progress; refresh giữ câu trả lời đã gửi; finish hiển thị 100 điểm/100% cho một câu đúng; Welcome ở viewport 390px. Kiểm tra này áp dụng cho gateway demo, chưa phải kiểm thử REST/socket.
+Luồng chính dùng `DatabaseApp` và `databaseApi`, không đọc quiz/session từ localStorage:
+
+- Dashboard: Teacher, quiz, số câu, session và số người tham gia.
+- Chi tiết quiz: câu hỏi, lựa chọn và đáp án cho môi trường test Teacher, giữ nguyên câu nhiều đáp án đúng.
+- Phiên: danh sách participants và từng attempt trong DB; không cộng điểm nhiều lượt làm vào một kết quả.
+- Báo cáo: các session FINISHED; accuracy tính theo accuracy_points/max_accuracy_points của attempt.
+- Trang chủ: tra cứu phòng theo PIN; chỉ nhận title/status/count, không nhận đáp án hoặc danh tính.
+
+API Teacher `/api/dev/*` dùng Teacher mẫu do server chọn và chỉ hoạt động khi NODE_ENV khác production. Đây là chế độ test, chưa phải xác thực. Auth cần được triển khai trước khi công khai API Teacher. API tạo/sửa/xóa, host/join/start/next/submit/finish chưa có; giao diện ghi rõ và không lưu giả vào localStorage. `/setup` kiểm tra HTTP health; `/ready` của BE kiểm tra DB.
+
+`LocalDemoApp` và `lib/demo.ts` được giữ làm tham khảo và kiểm thử UI cũ; không được mount trong luồng chính hiện tại.
+
+## Kiểm tra
+
+```powershell
+npm.cmd run test:db -w @qforge/frontend
+npm.cmd run test -w @qforge/frontend
+npm.cmd run check
+```
+
+`test:db` chạy HTTP backend trên cổng tạm và FE trong DOM với PostgreSQL thật, chỉ đọc DB. Kiểm tra dashboard bỏ localStorage, quiz seed 5 câu/20 options, session/participants, public response không lộ đáp án, ID sai/không tồn tại và retry sau lỗi mạng. `test` kiểm tra components và UI demo cũ. DOM tests không thay thế kiểm tra trực quan responsive.

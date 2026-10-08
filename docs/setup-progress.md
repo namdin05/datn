@@ -9,8 +9,8 @@ Ngày cập nhật: 07/10/2026. Branch: `setup/foundation`.
 | S01 | Draft | Phân công và baseline ghi ở mvp-decisions.md; auth/rule mismatch còn chờ xác nhận |
 | S02 | Hoàn thành trên máy Hộp | FE/BE/shared workspaces, scripts, lockfile, versions, gitignore và conventions; chưa xác minh trên máy Bảo |
 | S03 | Khởi động | Express app/HTTP bootstrap, env validation, CORS, health, JSON errors/size limit; validation cho API nghiệp vụ sẽ thêm tiếp |
-| S04 | Chưa bắt đầu | Chưa kết nối DB, chưa có migration/seed runner |
-| S05 | Khởi động | React/Vite/TS/Tailwind/Router; home và routes placeholder; shadcn/components/layout nghiệp vụ còn lại |
+| S04 | Hoàn thành trên máy Bảo | Pool pg kết nối Supabase; `/ready`; migration tracking và baseline đối chiếu schema; seed chạy lại an toàn, thêm đề 5 câu chuẩn 4/1; repository skeleton. Xem [hướng dẫn S04](database-setup.md) |
+| S05 | Đã triển khai nền FE | React/Vite/TS/Tailwind/Router; UI primitives theo cấu trúc shadcn/Radix; layouts Teacher/Student, loading/error/empty và error boundary. Luồng chính đọc DB qua API; Student gameplay vẫn chỉ ở code demo tham khảo. Chưa nghiệm thu trực quan responsive sau lần nối DB; auth/API ghi còn lại |
 | S06 | Khởi động | Shared health envelope và FE gọi HTTP thật; DTO/gateway nghiệp vụ còn lại |
 | S07 | Chưa bắt đầu | Auth Teacher chưa được chọn; chưa triển khai identity |
 | S08 | Một phần | README và CI config có sẵn; GitHub CI và onboarding trên máy Bảo chưa chạy |
@@ -32,6 +32,6 @@ Các smoke checks là kiểm tra của checkpoint scaffold, chưa phải bộ te
 ## Bước tiếp theo
 
 1. Hoàn thiện S03: error/validation helpers cho API nghiệp vụ, conventions route/service/repository.
-2. Hoàn thiện S05: shadcn/ui, Teacher/Student layouts và components dùng chung để Bảo phát triển UI.
-3. S04/S07 cần DB/access và quyết định auth; S06 chốt DTO/gateway cùng Nam/Lâm.
+2. S05 đã có nền FE và components dùng chung; tiếp tục nối REST ở S06 và auth ở S07.
+3. S04 đã kết nối DB và chạy migration/seed/test; S07 còn cần chốt auth. S06 chốt DTO/gateway cùng Nam/Lâm.
 4. Bảo lấy branch `setup/foundation`, kiểm tra clone/onboarding theo README; đối chiếu kết quả với CI trên GitHub sau khi push.

@@ -3,7 +3,7 @@ BEGIN;
 -- Fixed UUIDs make the demo dataset predictable across environments.
 INSERT INTO users (id, display_name, role) VALUES
 ('00000000-0000-0000-0000-000000000001', 'Demo Teacher', 'TEACHER'),
-('00000000-0000-0000-0000-000000000002', 'Demo Student', 'STUDENT');
+('00000000-0000-0000-0000-000000000002', 'Demo Student', 'STUDENT') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO quizzes (
     id, creator_id, title, description, status, published_at
@@ -14,7 +14,7 @@ INSERT INTO quizzes (
     'Seed data for the end-to-end MVP flow.',
     'PUBLISHED',
     now()
-);
+) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO questions (
     id, quiz_id, type, content, points, time_limit_seconds, position
@@ -45,7 +45,7 @@ INSERT INTO questions (
     1,
     25,
     3
-);
+) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO question_options (id, question_id, content, is_correct, position) VALUES
 ('30000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000001','3',FALSE,1),
@@ -59,7 +59,7 @@ INSERT INTO question_options (id, question_id, content, is_correct, position) VA
 
 ('30000000-0000-0000-0000-000000000008','20000000-0000-0000-0000-000000000003','HTTP polling only',FALSE,1),
 ('30000000-0000-0000-0000-000000000009','20000000-0000-0000-0000-000000000003','WebSocket',TRUE,2),
-('30000000-0000-0000-0000-000000000010','20000000-0000-0000-0000-000000000003','FTP',FALSE,3);
+('30000000-0000-0000-0000-000000000010','20000000-0000-0000-0000-000000000003','FTP',FALSE,3) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO sessions (
     id, quiz_id, host_id, pin, mode, status
@@ -70,7 +70,7 @@ INSERT INTO sessions (
     '123456',
     'CLASSIC',
     'WAITING'
-);
+) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO session_settings (
     session_id,
@@ -88,7 +88,7 @@ INSERT INTO session_settings (
     TRUE,
     TRUE,
     2
-);
+) ON CONFLICT (session_id) DO NOTHING;
 
 INSERT INTO participants (
     id, session_id, user_id, nickname, status
@@ -106,6 +106,6 @@ INSERT INTO participants (
     NULL,
     'Guest B',
     'JOINED'
-);
+) ON CONFLICT (id) DO NOTHING;
 
 COMMIT;
