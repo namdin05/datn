@@ -8,12 +8,13 @@
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
-    "test": "tsx --tsconfig tsconfig.json scripts/smoke.tsx",
+    "test": "tsx --tsconfig tsconfig.json scripts/smoke.tsx && tsx --tsconfig tsconfig.json scripts/core-smoke.tsx",
     "test:db": "tsx --tsconfig tsconfig.json scripts/database-smoke.tsx"
   },
   "dependencies": {
     "@qforge/shared": "*",
     "@radix-ui/react-slot": "^1.4.0",
+    "@supabase/supabase-js": "^2.117.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "19.3.0",

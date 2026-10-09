@@ -19,7 +19,7 @@ async function startApp(context: TestContext, router = Router(), options: {
   mode?: "test" | "production";
 } = {}) {
   const errors: unknown[] = [];
-  const app = createApp(readEnv({ NODE_ENV: options.mode ?? "test" }), {
+  const app = createApp(readEnv({ NODE_ENV: options.mode ?? "test", ENABLE_DEV_ROUTES: 'true' }), {
     db: options.db,
     apiRouter: router,
     errorLogger: (error) => errors.push(error),

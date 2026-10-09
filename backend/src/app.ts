@@ -7,12 +7,20 @@ import { sendSuccess } from "./common/response.js";
 import type { AppConfig } from "./config/env.js";
 import { createErrorHandler } from "./middleware/errors.js";
 import type { ErrorLogger } from "./middleware/errors.js";
-import { databaseReadRouter, publicRoomRouter } from "./modules/database-read.js";
+import { databaseReadRouter } from "./modules/database-read.js";
+import { createTeacherVerifier } from './auth/teacher.js';
+import type { VerifyTeacherToken } from './auth/teacher.js';
+import { ParticipantTokens } from './auth/participant.js';
+import { createServices } from './modules/application.js';
+import { apiRouter } from './modules/api.routes.js';
+import { publicRoomRouter } from './modules/reporting/report.routes.js';
+import { requireTeacher } from './auth/teacher.js';
 
 export function createApp(config: AppConfig, options: {
   db?: Pool;
   apiRouter?: Router;
   errorLogger?: ErrorLogger;
+  verifyTeacherToken?: VerifyTeacherToken;
 } = {}) {
   const { db } = options;
   const app = express();
@@ -37,9 +45,14 @@ export function createApp(config: AppConfig, options: {
   });
 
   if (db) {
-    app.use("/api/rooms", publicRoomRouter(db));
-    // Teacher read APIs use a demo actor until authentication is implemented.
-    if (config.NODE_ENV !== "production") app.use("/api/dev", databaseReadRouter(db));
+    const verify = options.verifyTeacherToken ?? (config.SUPABASE_URL ? createTeacherVerifier(config.SUPABASE_URL) : undefined);
+    const tokens = config.PARTICIPANT_TOKEN_HASH_SECRET ? new ParticipantTokens(config.PARTICIPANT_TOKEN_HASH_SECRET, config.PARTICIPANT_TOKEN_TTL_SECONDS) : undefined;
+    const services = createServices(db, tokens);
+    app.use('/api/rooms', publicRoomRouter(services.reports));
+    app.use('/api', (_req, res, next) => { res.setHeader('Cache-Control', 'no-store'); next(); });
+    // A privileged development escape hatch must be explicitly opted into.
+    if (config.ENABLE_DEV_ROUTES && config.NODE_ENV !== "production") app.use("/api/dev", databaseReadRouter(db));
+    app.use('/api', apiRouter(services, requireTeacher(db, verify)));
   }
   app.use("/api", options.apiRouter ?? Router());
 

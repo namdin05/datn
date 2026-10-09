@@ -1,5 +1,18 @@
 # QForge — Checkpoint triển khai
 
+## Checkpoint 10/10/2026 — Auth/REST implementation
+
+Branch `feat/auth-identity-rest`, based on main `d815e65`. Shared contracts, Supabase JWT verifier/user mapping, protected FE, guest token join/resume/revoke, Quiz CRUD/Publish, Host, REST lifecycle/snapshot, transactional answers and result/report now have implementation. Teacher/Student UI uses these APIs; landing points to /login and /join.
+
+- Local checks: lint/typecheck, 34 BE tests, 2 FE smoke suites and builds pass. SQL tests execute migrations/seeds/business transactions on isolated PGlite; JWT tests use signed ES256 tokens/local JWKS.
+- Migration 002 is authored; **not applied to team Supabase in this turn**. Auth URL/key/two real Teacher accounts/mapping and live login remain to configure. Participant secret generated in ignored local env.
+- S01 choices implemented; S06/S07 and C01–C06 have core code/tests but live DB/Auth/UI acceptance remains pending. S08 docs updated. H01/realtime still pending.
+- Backend refactored into feature modules with route/service/repository/policy/read models and explicit composition. Regression checks cover cross-module rollback and split HTTP auth/CRUD/gameplay/report routes. See [backend architecture](backend-architecture.md). Changes are saved as local commits on this feature branch; not pushed.
+- Tests do not validate PostgreSQL row-lock scheduling across multiple pg connections or full browser/responsive flow. `/api/dev/*` defaults off; /preview remains mock.
+
+Read [integration contract](integration-contract.md). The checkpoint below records historical evidence from 08/10 and is retained for context.
+
+
 Ngày cập nhật: 08/10/2026. Branch tích hợp: `feat/backend-foundation`, đã ghép main tại `43eb915`. Checkpoint S03 riêng: `b96da34`.
 
 ## Bước 1: baseline và workspace chạy được
