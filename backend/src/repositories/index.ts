@@ -1,25 +1,24 @@
 import type { Pool, PoolClient } from 'pg';
+import { userRepository } from '../modules/identity/user.repository.js';
+import { quizRepository } from '../modules/quizzes/quiz.repository.js';
 
-// Nhận cả pool và client transaction; service chịu trách nhiệm quyền và rule demo.
+// Compatibility API for existing S04 migration/seed scripts. Runtime features use
+// their own typed repositories; do not add application use cases to this adapter.
 type Db = Pool | PoolClient;
-export const apiStatus = (status: string) => status === 'IN_PROGRESS' ? 'ACTIVE' : status;
+import { apiStatus } from '../modules/sessions/session.mapper.js';
+export { apiStatus } from '../modules/sessions/session.mapper.js';
 
 export function repositories(db: Db) {
   return {
     users: {
-      async findById(id: string) { return (await db.query('SELECT id, display_name, role FROM public.users WHERE id=$1', [id])).rows[0] ?? null; },
-      async findTeacher() { return (await db.query("SELECT id, display_name, role FROM public.users WHERE role='TEACHER' ORDER BY created_at, id LIMIT 1")).rows[0] ?? null; },
+      findById: userRepository(db).findById,
+      findTeacher: userRepository(db).findDemoTeacher,
     },
     quizzes: {
       async listByCreator(id: string) { return (await db.query('SELECT id, creator_id, title, description, status FROM public.quizzes WHERE creator_id=$1 ORDER BY created_at DESC, id', [id])).rows; },
       async findById(id: string) { return (await db.query('SELECT id, creator_id, title, description, status FROM public.quizzes WHERE id=$1', [id])).rows[0] ?? null; },
       async createDraft(creatorId: string, title: string, description: string | null = null) { return (await db.query("INSERT INTO public.quizzes(creator_id,title,description) VALUES($1,$2,$3) RETURNING id,creator_id,title,description,status", [creatorId, title, description])).rows[0]; },
-      async questions(id: string) {
-        return (await db.query(`SELECT q.id,q.content,q.position,q.points,
-          COALESCE(jsonb_agg(jsonb_build_object('id',o.id,'content',o.content,'position',o.position,'is_correct',o.is_correct) ORDER BY o.position) FILTER(WHERE o.id IS NOT NULL),'[]') AS options
-          FROM public.questions q LEFT JOIN public.question_options o ON o.question_id=q.id
-          WHERE q.quiz_id=$1 GROUP BY q.id ORDER BY q.position`, [id])).rows;
-      },
+      questions: quizRepository(db).questions,
     },
     sessions: {
       async findById(id: string) {
