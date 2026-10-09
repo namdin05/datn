@@ -11,6 +11,10 @@ const envSchema = z.object({
   FRONTEND_ORIGINS: originsSchema.prefault(
     "http://localhost:5173,http://127.0.0.1:5173",
   ),
+  SUPABASE_URL: z.preprocess(v => v === '' ? undefined : v, z.url().optional()),
+  PARTICIPANT_TOKEN_HASH_SECRET: z.preprocess(v => v === '' ? undefined : v, z.string().min(32).optional()),
+  PARTICIPANT_TOKEN_TTL_SECONDS: z.coerce.number().int().min(60).max(604800).default(86400),
+  ENABLE_DEV_ROUTES: z.enum(['true', 'false']).default('false').transform(v => v === 'true'),
 });
 
 export function readEnv(source: NodeJS.ProcessEnv = process.env) {
