@@ -48,7 +48,7 @@ function Welcome() {
 function Login() {
   const [params] = useSearchParams(); const [register, setRegister] = useState(params.get('mode') === 'register'); const [email, setEmail] = useState(''); const [show, setShow] = useState(false); const navigate = useNavigate();
   function submit(e: FormEvent) { e.preventDefault(); sessionStorage.setItem('qforge-teacher', email); navigate('/teacher/quizzes'); }
-  return <><PublicHeader /><main id="main-content" className="auth-layout"><section className="auth-story"><Badge>● Hệ sinh thái khảo thí chuẩn mực 4.0</Badge><h1>Nền tảng kiểm tra & đánh giá trực tuyến <em>tức thì</em></h1><p>Tạo đề, tổ chức phiên học và theo dõi kết quả trong một không gian giảng dạy đơn giản, trực quan.</p><div className="story-decoration" aria-hidden="true"><span>Q</span><div>Chuẩn bị dễ dàng.<br />Kết nối cả lớp.<br />Hiểu từng kết quả.</div></div></section><section><Link className="auth-join" to="/"><Icon name="▣" /> Nhập mã PIN tham gia nhanh <Icon name="→" /></Link><form className="card auth-card" onSubmit={submit}>
+  return <><PublicHeader /><main id="main-content" className="auth-layout"><section className="auth-story"><Badge>● Hệ sinh thái khảo thí chuẩn mực 4.0</Badge><h1>Nền tảng kiểm tra & đánh giá trực tuyến <em>tức thì</em></h1><p>Tạo đề, tổ chức phiên học và theo dõi kết quả trong một không gian giảng dạy đơn giản, trực quan.</p><div className="story-decoration" aria-hidden="true"><span>Q</span><div>Chuẩn bị dễ dàng.<br />Kết nối cả lớp.<br />Hiểu từng kết quả.</div></div></section><section><Link className="auth-join" to="/join"><Icon name="▣" /> Nhập mã PIN tham gia nhanh <Icon name="→" /></Link><form className="card auth-card" onSubmit={submit}>
     <div className="segmented"><button type="button" aria-pressed={!register} className={!register ? 'selected' : ''} onClick={() => setRegister(false)}><Icon name="↪" /> Đăng nhập</button><button type="button" aria-pressed={register} className={register ? 'selected' : ''} onClick={() => setRegister(true)}><Icon name="＋" /> Đăng ký tài khoản</button></div>
     <p className="eyebrow">KHÔNG GIAN GIẢNG VIÊN</p><h2>{register ? 'Bắt đầu cùng QForge' : 'Chào mừng trở lại'}</h2>
     {register && <label>Họ và tên<Input required placeholder="Tên giảng viên" /></label>}
@@ -153,4 +153,4 @@ export function LocalDemoApp() {
   </Routes>{toast && <div className="toast" role="status"><span className="toast-check"><Icon name="✓" /></span><span>{toast}</span><button className="icon-button" aria-label="Đóng thông báo" onClick={() => setToast('')}><Icon name="×" /></button></div>}</>;
 }
 
-export function App() { return <DatabaseApp />; }
+export function App() { return window.location.pathname === '/preview' || window.location.pathname.startsWith('/preview/') ? <LocalDemoApp /> : <DatabaseApp />; }

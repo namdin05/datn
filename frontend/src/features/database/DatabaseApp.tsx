@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import { Link, Navigate, Route, Routes, useParams } from 'react-router';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import type { DbDashboard, DbQuiz, DbSession, DbSessionDetail } from '@qforge/shared';
 import { databaseApi } from '../../lib/api';
 import { TeacherLayout } from '../../app/layouts/TeacherLayout';
@@ -10,6 +10,7 @@ import { PageState } from '../../components/PageState';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { SetupPage } from '../setup/SetupPage';
+import { LandingPage } from '../landing/LandingPage';
 
 function useResource<T>(load: (signal: AbortSignal) => Promise<T>) {
   const [state,setState] = useState<{data?:T;error?:string;loading:boolean}>({loading:true});
@@ -74,8 +75,8 @@ function Welcome() {
   return <><PublicHeader/><main id="main-content" className="welcome"><h1>Tham gia cùng <em>QForge</em></h1><p className="intro">Tra cứu phòng bằng mã PIN trong DB.</p><form className="card join-card" onSubmit={e=>{void lookup(e);}}><label>Mã PIN<Input inputMode="numeric" pattern="[0-9]{1,12}" maxLength={12} required value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,''))}/></label><Button size="full" type="submit" disabled={loading} aria-busy={loading}>{loading?'Đang tra cứu…':'Tìm phòng thi'}</Button></form>{error&&<PageState kind="error" title="Không thể tìm phòng" description={error}/>} {room&&<PageState title={room.title} description={`PIN ${room.pin} · ${room.participantCount} người tham gia · ${room.status==='WAITING'?'Đang chờ':'Đang diễn ra'}`}><p>Đã đọc được phòng thật. API đăng ký participant và chơi chưa triển khai.</p></PageState>}<div className="teacher-invite"><p>Không gian giảng viên</p><Button asChild><Link to="/teacher/quizzes">Vào chế độ test</Link></Button></div></main><Footer/></>;
 }
 function Login() {return <><PublicHeader/><main id="main-content" className="setup-container"><PageState title="Không gian giảng viên" description="Đang test bằng Teacher mẫu có sẵn trong DB, chưa dùng email hoặc mật khẩu."><Button asChild><Link to="/teacher/quizzes">Vào chế độ test</Link></Button></PageState></main></>;}
-export function DatabaseApp(){return <><RouteEffects/><a className="skip-link" href="#main-content">Đến nội dung chính</a><div className="demo-notice">Dữ liệu từ PostgreSQL qua backend · Đang test đọc DB · Chưa có auth/API ghi</div><Routes>
-  <Route path="/" element={<Welcome/>}/><Route path="/join" element={<Welcome/>}/><Route path="/login" element={<Login/>}/>
+export function DatabaseApp(){const {pathname}=useLocation();return <><RouteEffects/><a className="skip-link" href="#main-content">Đến nội dung chính</a>{pathname!=='/'&&<div className="demo-notice">Dữ liệu từ PostgreSQL qua backend · Đang test đọc DB · Chưa có auth/API ghi</div>}<Routes>
+  <Route path="/" element={<LandingPage/>}/><Route path="/join" element={<Welcome/>}/><Route path="/login" element={<Login/>}/>
   <Route path="/teacher/quizzes" element={<DevLayout><Dashboard/></DevLayout>}/><Route path="/teacher/editor/new" element={<DevLayout><PageState title="Chưa có API tạo đề" description="Đọc đề có sẵn từ danh sách để kiểm tra kết nối DB."><Button asChild><Link to="/teacher/quizzes">Xem đề thi</Link></Button></PageState></DevLayout>}/><Route path="/teacher/editor/:id" element={<DevLayout><QuizPage/></DevLayout>}/>
   <Route path="/teacher/sessions" element={<DevLayout><SessionsPage/></DevLayout>}/><Route path="/teacher/reports" element={<DevLayout><SessionsPage reports/></DevLayout>}/><Route path="/teacher/session/:id" element={<DevLayout><SessionPage/></DevLayout>}/>
   <Route path="/student/session/:id" element={<Navigate to="/" replace/>}/><Route path="/setup" element={<main id="main-content" className="setup-container"><SetupPage/></main>}/><Route path="*" element={<main id="main-content" className="setup-container"><PageState title="Không tìm thấy trang"><Button asChild><Link to="/">Về trang chủ</Link></Button></PageState></main>}/>
