@@ -46,7 +46,7 @@ npm run check
 npm run start:be
 ```
 
-`check` chạy lint, typecheck, 27 HTTP tests cho BE, smoke test FE và build shared → BE → FE. `npm test` build shared rồi chạy test scripts của các workspace; không cần DB thật. Kiểm thử PostgreSQL/FE đọc DB thật chạy riêng theo [hướng dẫn S04](docs/database-setup.md) và [README FE](frontend/README.md). `start:be` chạy BE đã build; `preview:fe` serve FE build ở cổng 4173. Khi kiểm tra kết nối bằng preview, thêm origin `http://127.0.0.1:4173` vào `backend/.env` và restart BE.
+`check` chạy lint, typecheck, 34 tests cho BE, hai bộ smoke test FE và build shared → BE → FE. `npm test` build shared rồi chạy test scripts của các workspace; không cần DB thật. Kiểm thử PostgreSQL/FE đọc DB thật chạy riêng theo [hướng dẫn S04](docs/database-setup.md) và [README FE](frontend/README.md). `start:be` chạy BE đã build; `preview:fe` serve FE build ở cổng 4173. Khi kiểm tra kết nối bằng preview, thêm origin `http://127.0.0.1:4173` vào `backend/.env` và restart BE.
 
 BE đọc `backend/.env`. FE đọc `frontend/.env`; restart Vite khi đổi env. Dùng `HOST=0.0.0.0` và PORT do hosting cấp khi deploy BE; cấu hình FRONTEND_ORIGINS theo URL FE thật. FE dùng VITE_API_URL của BE khi build. Chỉ public config được đặt trong VITE_*; .env thật được Git ignore.
 
@@ -56,11 +56,14 @@ Nếu cổng 3002/5173 đã được dùng, dừng process cũ hoặc đổi c�
 
 - Workspace, scripts, shared response contract, Express health/error handling và React routes ban đầu đã được dựng. S03 bổ sung ApiError, response helpers và Zod validation cho body/params/query.
 - Đã ghép nền DB/FE của team: PostgreSQL pool, migration/seed runner, repositories, layouts/components và API đọc dữ liệu. `/setup` là trang kiểm tra dành cho development.
-- API Teacher `/api/dev/*` dùng actor demo và không mount trong production. Auth, API ghi nghiệp vụ, session gateway hoàn chỉnh và Socket.IO chưa được triển khai.
+- Auth/REST core đã có trên branch `feat/auth-identity-rest`: Teacher Supabase Auth/JWT mapping, Quiz CRUD/Publish/Host, Student opaque token join/resume, lifecycle/snapshot, answer/scoring và result/report. Xem [contract và cấu hình](docs/integration-contract.md). Migration 002 và Auth account mapping cần cấu hình trên DB development trước khi dùng.
+- API Teacher `/api/dev/*` dùng actor demo, chỉ mount khi bật ENABLE_DEV_ROUTES=true trong môi trường không phải production. Mặc định tắt. `/preview/*` vẫn là demo local; main /login và /join dùng REST thật. Socket.IO chưa triển khai.
 - `/health` chỉ kiểm tra HTTP server sống; `/ready` chạy `SELECT 1` để kiểm tra kết nối DB, **không xác nhận đầy đủ migrations/seed hoặc nghiệp vụ**.
 - CI gọi `npm ci` và `npm run check`, bao gồm tests BE/FE. Xem kết quả theo branch/PR trên GitHub Checks.
 
-Đọc [hướng dẫn S03: response, validation và module BE](docs/backend-foundation.md), [baseline và các điểm cần xác nhận](docs/mvp-decisions.md) và [checkpoint triển khai](docs/setup-progress.md). Bước tiếp theo: xác minh trên DB phát triển, chốt DTO/gateway ở S06 và auth ở S07.
+Cấu trúc backend và transaction boundaries: [hướng dẫn kiến trúc](docs/backend-architecture.md).
+
+Đọc [hướng dẫn S03: response, validation và module BE](docs/backend-foundation.md), [baseline và các điểm cần xác nhận](docs/mvp-decisions.md) và [checkpoint triển khai](docs/setup-progress.md). Bước tiếp theo: cấu hình Supabase Auth/signing key, áp dụng migration 002 và map hai Teacher; nghiệm thu REST flow thật trước H01. Bộ test local không thay cho live DB/Auth và browser acceptance.
 
 ## Các file config cần đọc khi bắt đầu
 

@@ -1,3 +1,13 @@
+# Frontend checkpoint 10/10/2026
+
+Main routes now use authenticated REST: /login (prepared Supabase Teacher account), /teacher/quizzes (owned DB data), /teacher/editor/new or /:id (draft/publish/host), /teacher/session/:id (manual lifecycle/progress/report), /join and /student/session/:id (guest token, manual snapshot, submit/result). Configure .env from .env.example; apply BE migration 002 and map accounts first. See [integration contract](../docs/integration-contract.md).
+
+`npm run check` includes mock UI smoke plus real HTTP → isolated PostgreSQL Student smoke. `npm run test:db -w @qforge/frontend` now performs read-only business checks against live Supabase Auth/DB with QFORGE_TEST_TEACHER_EMAIL/PASSWORD in ignored backend/.env; it requires URL/key and account mapping. It no longer bypasses auth through a demo actor.
+
+Teacher and guest credentials are stored in same-tab sessionStorage. /preview remains local mock. Browser/responsive, real account login and team DB flow still need acceptance. The older foundation notes below are retained as history.
+
+---
+
 # QForge frontend
 
 Frontend dùng React/Vite/TypeScript, Tailwind và Router, giữ tông kem/cam theo mẫu demoB. Layout dùng chung ở `src/app/layouts/`, Button/Input/Card ở `src/components/ui/`. PageState/ErrorBoundary phục vụ loading/error/empty và lỗi render.
