@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export * from "./api.js";
+export * from "./contracts.js";
 
 export const healthResponseSchema = z.object({
   success: z.literal(true),
