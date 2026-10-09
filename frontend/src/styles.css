@@ -3,6 +3,8 @@
 .db-question{margin:24px 0}.db-question .teacher-options{margin-top:20px}.db-question h2{overflow-wrap:anywhere}.quiz-card h3{overflow-wrap:anywhere}
 
 .skip-link{position:fixed;top:8px;left:8px;transform:translateY(-160%);z-index:200;background:#fff;color:#a55320;padding:12px 16px;border-radius:8px}.skip-link:focus{transform:none}
+/* Vùng nội dung nhận focus khi chuyển trang, không hiển thị khung mặc định. */
+#main-content:focus{outline:none}
 .page-state{text-align:center;padding:40px 24px;margin:20px 0;display:grid;justify-items:center;gap:12px}.page-state>p{max-width:520px;color:var(--muted)}.page-state-actions{margin-top:8px}.page-state>.ui-icon{width:28px;height:28px;color:var(--accent)}.page-state.error{background:#fff8f5}.setup-panel{padding:32px}.setup-panel>.card{padding:20px}.ui-input:disabled{opacity:.6;cursor:not-allowed}
 
 :root{font-family:Arial,Helvetica,sans-serif;color:#342e27;background:#faf5ee;font-synthesis:none;font-size:14px;--accent:#b96528;--soft:#f3ece3;--muted:#8b8378;--border:#eee5da;--serif:Georgia,'Times New Roman',serif}
