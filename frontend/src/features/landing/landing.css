@@ -8,3 +8,35 @@
 @media(min-width:1500px){.qf-hero{min-height:740px}}@media(max-width:1100px){.qf-nav{padding:23px 28px}.qf-hero{padding:35px 28px;grid-template-columns:1fr 1fr}.qf-universe{height:480px}.qf-ring-one{width:350px}.qf-ring-two{width:370px}.qf-core{width:165px;height:165px}.qf-core>strong{font-size:65px}.qf-satellite{padding:12px;gap:8px}.qf-satellite-arrow{display:none}.qf-orbit-0{left:0}.qf-orbit-2{left:4%}.qf-experience,.qf-footer{margin-left:28px;margin-right:28px}.qf-actions{gap:8px}}
 @media(max-width:760px){.qf-nav{padding:20px}.qf-nav nav{gap:15px;font-size:11px}.qf-nav nav>a:first-child{display:none}.qf-nav .qf-nav-cta{padding:9px 13px;gap:10px}.qf-hero{grid-template-columns:1fr;padding:48px 22px 25px;gap:0;min-height:auto}.qf-hero h1{font-size:48px;letter-spacing:-1.8px}.qf-hero-copy>p{max-width:440px}.qf-universe{width:100%;max-width:500px;margin:10px auto 0;height:440px}.qf-orbit-0{top:21%}.qf-orbit-1{top:44%}.qf-orbit-2{top:69%}.qf-scene-caption{bottom:0}.qf-experience{margin:15px 22px 0;padding-top:30px}.qf-features{grid-template-columns:1fr}.qf-section-intro h2{font-size:22px}.qf-features article{padding:22px}.qf-footer{margin:0 22px;flex-direction:column;gap:12px}.qf-core-small{font-size:6px}.qf-core>span:last-child{font-size:8px}.qf-ring-two{width:330px}.qf-ring-one{width:320px}.qf-ring-three{width:290px;height:290px}}
 @media(prefers-reduced-motion:reduce){.qf-landing *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Elliptical orbit: cards stay upright while moving in front of and behind the core. */
+.qf-universe .qf-orbit{left:50%;top:46%;right:auto;animation:none;will-change:transform;transform:translate(-50%,-50%)}
+.qf-universe .qf-core{z-index:2;pointer-events:none}
+.qf-universe .qf-ring-one{width:76%;height:54%;transform:translate(-50%,-50%);border-color:#b7824f70;box-shadow:0 0 18px #d5a77712}
+.qf-universe .qf-ring-two{border-color:#c4976b35}
+.qf-universe .qf-satellite{white-space:nowrap;box-shadow:0 12px 30px #674a2520}
+.qf-universe .qf-satellite:hover,.qf-universe .qf-satellite:focus-visible{background:#fff4e5;border-color:#b85f2b;box-shadow:0 15px 35px #9e64252a}
+.qf-universe .qf-scene-caption{z-index:4}
+@media(prefers-reduced-motion:reduce){.qf-universe .qf-orbit{will-change:auto}}
+/* Expanded orbit with pointer drag controls. */
+.qf-hero{max-width:1480px;grid-template-columns:minmax(380px,.85fr) minmax(0,1.3fr);gap:28px;padding-left:48px;padding-right:36px;min-height:780px}
+.qf-universe{height:660px;cursor:default;touch-action:pan-y;user-select:none}
+.qf-universe .qf-core{width:245px;height:245px}
+.qf-universe .qf-core>strong{font-size:102px}
+.qf-universe .qf-core-small{font-size:9px}
+.qf-universe .qf-core>span:last-child{font-size:12px}
+.qf-universe .qf-ring-one{width:78%;height:60%;border-color:#b7824f85}
+.qf-universe .qf-ring-two{width:90%;height:54%}
+.qf-universe .qf-ring-three{width:440px;height:440px}
+.qf-universe .qf-satellite{cursor:default;padding:20px 22px;touch-action:pan-y}
+.qf-universe .qf-satellite strong{font-size:15px}
+.qf-universe .qf-satellite small{font-size:8px}
+.qf-universe .qf-satellite-icon{width:43px;height:43px;font-size:25px}
+.qf-universe.is-dragging,.qf-universe.is-dragging .qf-satellite{cursor:default}
+.qf-universe.is-dragging .qf-satellite{transition:none}
+.qf-scene-caption small{display:block;font-size:10px;color:#947455;margin-top:9px}
+@media(max-width:1100px){.qf-hero{grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr);min-height:680px;padding:35px 28px;gap:12px}.qf-universe{height:560px}.qf-universe .qf-core{width:195px;height:195px}.qf-universe .qf-core>strong{font-size:80px}.qf-universe .qf-satellite{padding:14px;gap:8px}.qf-universe .qf-satellite strong{font-size:12px}.qf-universe .qf-satellite-icon{width:32px;height:32px}.qf-universe .qf-ring-three{width:340px;height:340px}}
+@media(max-width:760px){.qf-hero{grid-template-columns:1fr;min-height:auto;padding:40px 20px 25px}.qf-universe{height:510px;max-width:600px}.qf-universe .qf-core{width:180px;height:180px}.qf-universe .qf-core>strong{font-size:75px}.qf-universe .qf-core-small{font-size:7px}.qf-universe .qf-core>span:last-child{font-size:10px}.qf-universe .qf-satellite{padding:12px 10px}.qf-universe .qf-satellite strong{font-size:11px}.qf-universe .qf-ring-three{width:290px;height:290px}}
+/* Subtle light on the hovered card, with the normal arrow cursor. */
+.qf-universe .qf-satellite:hover,.qf-universe .qf-satellite:focus-visible{background:#fff8ee;border-color:#d5a16d;box-shadow:0 0 22px #e2ad6f55,0 10px 26px #9e64251a;transform:none}
+.qf-universe .qf-satellite:hover .qf-satellite-icon{background:#f9dfbf;color:#b85f2b}
