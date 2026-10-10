@@ -53,7 +53,7 @@ try {
   await act(async () => [...container.querySelectorAll('button')].find(b => b.textContent === 'Cập nhật phiên')!.click());
   await waitFor(() => container.querySelectorAll('input[type="radio"]').length === 4);
   await act(async () => container.querySelector<HTMLInputElement>('input[type="radio"]')!.click());
-  await act(async () => [...container.querySelectorAll('button')].find(b => b.textContent === 'Gửi câu trả lời')!.click());
+  assert.ok(![...container.querySelectorAll('button')].some(b => b.textContent === 'Gửi câu trả lời'));
   await waitFor(() => container.textContent!.includes('Đã lưu câu trả lời'));
   assert.ok(container.querySelector('fieldset')!.disabled);
   await reset(); await student(); await waitFor(() => container.textContent!.includes('Đã lưu câu trả lời'));

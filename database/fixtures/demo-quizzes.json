@@ -1,0 +1,23 @@
+[
+  {"id":"20000000-0000-4000-8000-000000000001","title":"Kiến thức lập trình web cơ bản","description":"5 câu ôn tập HTML, CSS, JavaScript và HTTP. Mỗi câu đúng được 100 điểm.","questions":[
+    {"content":"HTML được sử dụng chủ yếu để làm gì?","options":["Tạo cấu trúc nội dung trang web","Lưu trữ dữ liệu trong cơ sở dữ liệu","Mã hóa mật khẩu","Quản lý phiên bản mã nguồn"],"correct":0},
+    {"content":"Thuộc tính CSS nào thay đổi màu chữ?","options":["background-color","color","font-size","margin"],"correct":1},
+    {"content":"Trong JavaScript, phương thức nào chuyển chuỗi JSON thành đối tượng?","options":["JSON.stringify()","Array.join()","JSON.parse()","Object.keys()"],"correct":2},
+    {"content":"HTTP method nào thường được dùng để lấy dữ liệu?","options":["POST","DELETE","PATCH","GET"],"correct":3},
+    {"content":"Trong React, hook nào dùng để quản lý state của component?","options":["useState","useRef","useEffect","useContext"],"correct":0}
+  ]},
+  {"id":"20000000-0000-4000-8000-000000000002","title":"Cơ sở dữ liệu quan hệ","description":"5 câu về khóa, truy vấn và transaction trong cơ sở dữ liệu quan hệ.","questions":[
+    {"content":"Vai trò chính của khóa chính (PRIMARY KEY) là gì?","options":["Sắp xếp các dòng theo thời gian","Định danh duy nhất mỗi dòng trong bảng","Lưu mật khẩu người dùng","Tự động sao lưu dữ liệu"],"correct":1},
+    {"content":"Câu lệnh SQL nào dùng để truy vấn dữ liệu?","options":["INSERT","UPDATE","SELECT","DELETE"],"correct":2},
+    {"content":"FOREIGN KEY được dùng để làm gì?","options":["Mã hóa các cột văn bản","Tăng dung lượng lưu trữ","Xóa mọi bản ghi trùng nhau","Ràng buộc tham chiếu giữa các bảng"],"correct":3},
+    {"content":"Trong transaction, ROLLBACK có tác dụng gì?","options":["Hủy các thay đổi chưa commit của transaction","Lưu vĩnh viễn mọi thay đổi","Tạo một bảng mới","Khởi động lại database server"],"correct":0},
+    {"content":"Mệnh đề nào lọc các nhóm sau khi GROUP BY?","options":["ORDER BY","HAVING","LIMIT","JOIN"],"correct":1}
+  ]},
+  {"id":"20000000-0000-4000-8000-000000000003","title":"EQ và kỹ năng làm việc nhóm","description":"5 tình huống giao tiếp, lắng nghe và hợp tác trong học tập.","questions":[
+    {"content":"Khi bạn trong nhóm mắc lỗi, cách phản hồi nào mang tính xây dựng nhất?","options":["Chê trách trước cả nhóm","Không cho bạn đó tham gia nữa","Góp ý cụ thể và cùng tìm cách khắc phục","Đăng lỗi của bạn lên mạng"],"correct":2},
+    {"content":"Khi hai thành viên bất đồng ý kiến, nhóm nên làm gì trước?","options":["Chọn ý kiến của người nói lớn nhất","Bỏ qua cả hai ý kiến","Dừng dự án ngay","Lắng nghe lý do của hai bên và làm rõ mục tiêu chung"],"correct":3},
+    {"content":"Biểu hiện nào thể hiện lắng nghe tích cực?","options":["Tập trung, đặt câu hỏi làm rõ và nhắc lại ý chính","Ngắt lời để kể chuyện của mình","Xem điện thoại khi người khác nói","Kết luận trước khi nghe xong"],"correct":0},
+    {"content":"Khi nhận ra không kịp hoàn thành phần việc đã nhận, bạn nên làm gì?","options":["Giữ im lặng đến hạn nộp","Báo sớm, nêu tiến độ và thống nhất phương án hỗ trợ","Đổ lỗi cho các thành viên khác","Tự bỏ nhiệm vụ không thông báo"],"correct":1},
+    {"content":"Khi một người bạn đang buồn và thu mình, cách ứng xử phù hợp nhất là gì?","options":["Ép bạn kể ngay mọi chuyện","Chê bạn quá nhạy cảm","Thể hiện sự quan tâm, lắng nghe khi bạn muốn chia sẻ","Kể chuyện của bạn cho cả lớp"],"correct":2}
+  ]}
+]
