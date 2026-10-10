@@ -1,6 +1,5 @@
-import { calculateResult } from '@qforge/shared';
-import type { ParticipantSnapshot, TeacherActor, teacherSnapshotSchema } from '@qforge/shared';
-import type { z } from 'zod';
+import { calculateResult, LEADERBOARD_TOP } from '@qforge/shared';
+import type { ParticipantSnapshot, TeacherActor, TeacherSnapshot } from '@qforge/shared';
 import type { Database } from '../../common/database.js';
 import { answerRepository } from '../answers/answer.repository.js';
 import { sessionRepository } from './session.repository.js';
@@ -8,13 +7,13 @@ import { snapshotRepository } from './session.snapshot.repository.js';
 import { assertSessionHost } from './session.policy.js';
 import type { SessionRow } from './session.types.js';
 
-type TeacherSnapshot = z.infer<typeof teacherSnapshotSchema>;
 async function base(db: Database, session: SessionRow) {
   return {
     sessionId: session.id, title: session.title, pin: session.pin,
     status: (session.status === 'IN_PROGRESS' ? 'ACTIVE' : session.status) as ParticipantSnapshot['status'],
     stateVersion: session.state_version, currentPosition: session.current_question_position,
     totalQuestions: await sessionRepository(db).totalQuestions(session.quiz_id),
+    phase: session.live_phase, leaderboardEvery: session.leaderboard_every,
   };
 }
 
@@ -27,22 +26,29 @@ export const sessionSnapshots = {
     const repo = snapshotRepository(db);
     let currentQuestion: ParticipantSnapshot['currentQuestion'] = null;
     let hasAnsweredCurrentQuestion = false;
-    if (session.status === 'IN_PROGRESS' && session.current_question_position) {
+    let leaderboard: ParticipantSnapshot['leaderboard'] = null;
+    if (session.status === 'IN_PROGRESS' && session.live_phase === 'QUESTION' && session.current_question_position) {
       currentQuestion = await repo.question(session.quiz_id, session.current_question_position);
       if (!currentQuestion) throw new Error('CURRENT_QUESTION_MISSING');
       hasAnsweredCurrentQuestion = !!attempt && await repo.hasAnswered(attempt.id, currentQuestion.id);
+    } else if (session.status === 'FINISHED' || session.live_phase === 'LEADERBOARD') {
+      // Rankings are hidden while a question is open so they cannot reveal its answer.
+      const entries = await repo.leaderboard(session.id);
+      leaderboard = { top: entries.slice(0, LEADERBOARD_TOP), me: entries.find(e => e.participantId === participant.id) ?? null, totalParticipants: entries.length };
     }
     return {
-      ...state, participant: { id: participant.id, nickname: participant.nickname }, currentQuestion, hasAnsweredCurrentQuestion,
+      ...state, participant: { id: participant.id, nickname: participant.nickname }, currentQuestion, hasAnsweredCurrentQuestion, leaderboard,
       result: session.status === 'FINISHED' && attempt ? calculateResult(attempt.total_questions, attempt.correct_count, attempt.incorrect_count) : null,
     };
   },
   async teacher(db: Database, actor: TeacherActor, session: SessionRow): Promise<TeacherSnapshot> {
     assertSessionHost(session, actor);
     const state = await base(db, session);
-    const participants = await snapshotRepository(db).participantProgress(session.id, session.current_question_position);
+    const repo = snapshotRepository(db);
+    const participants = await repo.participantProgress(session.id, session.current_question_position);
     return {
       ...state,
+      leaderboard: await repo.leaderboard(session.id),
       participants: participants.map(participant => ({
         id: participant.id, nickname: participant.nickname, hasAnsweredCurrentQuestion: participant.answered,
         result: session.status === 'FINISHED' && participant.total_questions !== null

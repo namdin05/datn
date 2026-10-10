@@ -1,4 +1,4 @@
-import type { PublicQuestion } from '@qforge/shared';
+import type { LeaderboardEntry, PublicQuestion } from '@qforge/shared';
 import type { Database } from '../../common/database.js';
 
 interface ParticipantProgressRow {
@@ -24,6 +24,12 @@ export function snapshotRepository(db: Database) {
     },
     async hasAnswered(attemptId: string, questionId: string) {
       return !!(await db.query('SELECT id FROM public.answers WHERE attempt_id=$1 AND question_id=$2', [attemptId, questionId])).rowCount;
+    },
+    async leaderboard(sessionId: string): Promise<LeaderboardEntry[]> {
+      return (await db.query<LeaderboardEntry>(`SELECT p.id AS "participantId",p.nickname,
+        (RANK() OVER (ORDER BY COALESCE(a.session_score,0) DESC))::int AS rank,COALESCE(a.session_score,0)::int AS score,COALESCE(a.correct_count,0)::int AS correct
+        FROM public.participants p LEFT JOIN public.attempts a ON a.participant_id=p.id AND a.attempt_number=1
+        WHERE p.session_id=$1 ORDER BY rank,p.nickname,p.id`, [sessionId])).rows;
     },
     async participantProgress(sessionId: string, position: number | null) {
       return (await db.query<ParticipantProgressRow>(`SELECT p.id,p.nickname,a.total_questions,a.correct_count,a.incorrect_count,

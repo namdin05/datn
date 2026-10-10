@@ -1,3 +1,4 @@
+import { nextOpensLeaderboard } from '@qforge/shared';
 import type { TeacherActor } from '@qforge/shared';
 import { ApiError } from '../../common/api-error.js';
 import type { SessionAction, SessionRow } from './session.types.js';
@@ -22,4 +23,11 @@ export function assertSessionAction(session: SessionRow, action: SessionAction, 
   } else if (session.status !== 'IN_PROGRESS') {
     throw new ApiError('CONFLICT');
   }
+}
+// "next" after every N-th question (except the last) opens the leaderboard step first.
+export function nextStep(session: SessionRow, total: number): 'leaderboard' | 'question' {
+  return nextOpensLeaderboard({
+    status: session.status, phase: session.live_phase, currentPosition: session.current_question_position,
+    totalQuestions: total, leaderboardEvery: session.leaderboard_every,
+  }) ? 'leaderboard' : 'question';
 }

@@ -3,7 +3,7 @@ import { createApiResponseSchema, dbDashboardSchema, dbQuizSchema, dbSessionDeta
 import type { ApiFailure, QuizInput, ParticipantCredential } from '@qforge/shared';
 import { getTeacherToken } from './auth';
 
-const apiUrl = (import.meta.env?.VITE_API_URL || 'http://127.0.0.1:3002').replace(/\/$/, '');
+export const apiUrl = (import.meta.env?.VITE_API_URL || 'http://127.0.0.1:3002').replace(/\/$/, '');
 export class HttpApiError extends Error {
   constructor(readonly status: number, readonly error: ApiFailure['error']) { super(error.message); }
 }
@@ -36,11 +36,11 @@ export const teacherApi = {
   saveQuiz: (body: QuizInput, id?: string) => requestApi(id ? `/api/quizzes/${id}` : '/api/quizzes', dbQuizSchema, { method: id ? 'PUT' : 'POST', body, teacher: true }),
   publish: (id: string) => requestApi(`/api/quizzes/${id}/publish`, dbQuizSchema, { method: 'POST', teacher: true }),
   remove: (id: string) => requestApi(`/api/quizzes/${id}`, z.object({ deleted: z.literal(true) }), { method: 'DELETE', teacher: true }),
-  host: (quizId: string) => requestApi('/api/sessions', teacherSnapshotSchema, { method: 'POST', body: { quizId }, teacher: true }),
+  host: (quizId: string, leaderboardEvery: number | null) => requestApi('/api/sessions', teacherSnapshotSchema, { method: 'POST', body: { quizId, leaderboardEvery }, teacher: true }),
   snapshot: (id: string, signal?: AbortSignal) => requestApi(`/api/sessions/${id}/snapshot`, teacherSnapshotSchema, { teacher: true, signal }),
   action: (id: string, action: 'start' | 'next' | 'finish', expectedVersion: number) => requestApi(`/api/sessions/${id}/actions`, teacherSnapshotSchema, { method: 'POST', body: { action, expectedVersion }, teacher: true }),
 };
-// Components depend on this boundary; the realtime adapter can be attached here.
+// Components depend on this boundary; realtime notifications (lib/realtime) trigger these reads.
 export const sessionGateway = {
   join: (pin: string, nickname: string, requestId: string) => requestApi('/api/sessions/join', participantCredentialSchema, { method: 'POST', body: { pin, nickname, requestId } }),
   snapshot: (c: ParticipantCredential, signal?: AbortSignal) => requestApi(`/api/participants/sessions/${c.sessionId}`, snapshotSchema, { token: c.token, signal }),

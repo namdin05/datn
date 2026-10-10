@@ -42,6 +42,8 @@ Session snapshot carries sessionId/status/stateVersion/currentPosition/totalQues
 
 Teacher actions require expectedVersion. A stale/retried action conflicts, then UI reloads; it cannot advance twice. SessionGateway is the FE transport boundary. Snapshot GET is currently manual; Socket.IO subscriptions can attach here later.
 
+Realtime and leaderboard: see [realtime-leaderboard.md](realtime-leaderboard.md). Snapshots now also carry `phase`, `leaderboardEvery` and `leaderboard`; migration 003 is required.
+
 Socket adapter must reuse `resolveTeacher`, `ParticipantTokens.resolve` and `createServices` và các service theo module. Attach does not repeat join/create participant. Emit after committed service returns, with separate Teacher/Student audiences. `/api/dev/*` remains an explicit local escape hatch (`ENABLE_DEV_ROUTES=true`), is off by default and never mounts in production.
 
 ## Database and acceptance

@@ -128,3 +128,5 @@ form.auth-card>label+.button{margin-top:24px}
 .button{line-height:1.5;text-align:center;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .button .ui-icon,.button-spinner{flex-shrink:0}
 .quiz-actions{row-gap:12px}
+/* Live leaderboard and realtime status */
+select{display:block;font:inherit;border:1px solid transparent;border-radius:6px;background:#f6f0e8;color:#3e342b;padding:12px 14px;width:100%;margin-top:8px}select:focus-visible{outline:2px solid var(--accent)}.host-option{min-width:240px}.realtime-status{font-size:11px;color:var(--muted);margin:8px 0}.realtime-status.offline .online-dot,.realtime-status.connecting .online-dot{background:#c9a24a}.leaderboard-panel{margin:20px 0;display:grid;gap:12px}.leaderboard .rank{font-weight:700;color:var(--accent)}.leaderboard tr.me td{background:#fff7ef;font-weight:600}
