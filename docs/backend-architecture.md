@@ -11,6 +11,7 @@ backend/src/
 ├── common/                        # ApiError, response, HTTP helpers, Database type
 ├── config/                        # Env, pool và transaction helper
 ├── middleware/                    # Validation, error handling
+├── realtime/socket.ts             # Socket.IO adapter: handshake auth, rooms, notifications
 ├── modules/
 │   ├── application.ts             # Composition root: tạo/inject các services
 │   ├── api.routes.ts              # Lắp routes, chia Teacher/Guest auth boundary
@@ -55,7 +56,8 @@ backend/src/
 ```mermaid
 flowchart LR
   H[REST routes / controllers] --> S[Application services]
-  W[Future socket adapter] --> S
+  W[Socket.IO adapter] -. subscribe .-> E[SessionEvents]
+  S -. publish after commit .-> E
   S --> P[Policies / DTO mapping]
   S --> R[Typed repositories]
   R --> D[PostgreSQL]
@@ -91,6 +93,8 @@ transaction(pool, client =>
 - Repository không commit; socket adapter chỉ emit sau khi lời gọi service đã resolve, tức transaction đã commit. Không emit bên trong transaction callback.
 
 ## Điểm nối realtime
+
+Đã triển khai trên `feat/realtime-leaderboard`; xem [realtime và bảng xếp hạng](realtime-leaderboard.md). Services nhận port `SessionEvents` từ `createServices(pool, credentials, events)` và publish sau khi transaction resolve.
 
 ```ts
 const services = createServices(pool, participantCredentials);

@@ -228,7 +228,7 @@ test('JWT + HTTP: verify signature/issuer/audience/expiry, DB Teacher mapping, o
 });
 
 test('snapshot version prevents backwards session state but accepts participant changes at equal version', () => {
-  const base = { sessionId: a.id, title: 'Quiz', pin: '012345', status: 'ACTIVE' as const, stateVersion: 3, currentPosition: 1, totalQuestions: 1, currentQuestion: null, hasAnsweredCurrentQuestion: false, participant: { id: b.id, nickname: 'Student' }, result: null };
+  const base = { sessionId: a.id, title: 'Quiz', pin: '012345', status: 'ACTIVE' as const, stateVersion: 3, currentPosition: 1, totalQuestions: 1, phase: 'QUESTION' as const, leaderboardEvery: null, currentQuestion: null, hasAnsweredCurrentQuestion: false, participant: { id: b.id, nickname: 'Student' }, result: null, leaderboard: null };
   assert.equal(applySnapshot(base, { ...base, stateVersion: 2 }), base);
   assert.equal(applySnapshot(base, { ...base, hasAnsweredCurrentQuestion: true }).hasAnsweredCurrentQuestion, true);
 });

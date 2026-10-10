@@ -24,6 +24,7 @@
     "express": "5.2.1",
     "jose": "^6.2.12",
     "pg": "^8.23.1",
+    "socket.io": "^4.8.4",
     "zod": "4.6.5"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^24.0.0",
     "@types/pg": "^8.23.1",
+    "socket.io-client": "^4.8.4",
     "tsx": "^4.0.0"
   }
 }

@@ -57,7 +57,7 @@ Nếu cổng 3002/5173 đã được dùng, dừng process cũ hoặc đổi c�
 - Workspace, scripts, shared response contract, Express health/error handling và React routes ban đầu đã được dựng. S03 bổ sung ApiError, response helpers và Zod validation cho body/params/query.
 - Đã ghép nền DB/FE của team: PostgreSQL pool, migration/seed runner, repositories, layouts/components và API đọc dữ liệu. `/setup` là trang kiểm tra dành cho development.
 - Auth/REST core đã có trên branch `feat/auth-identity-rest`: Teacher Supabase Auth/JWT mapping, Quiz CRUD/Publish/Host, Student opaque token join/resume, lifecycle/snapshot, answer/scoring và result/report. Xem [contract và cấu hình](docs/integration-contract.md). Migration 002 và Auth account mapping cần cấu hình trên DB development trước khi dùng.
-- API Teacher `/api/dev/*` dùng actor demo, chỉ mount khi bật ENABLE_DEV_ROUTES=true trong môi trường không phải production. Mặc định tắt. `/preview/*` vẫn là demo local; main /login và /join dùng REST thật. Socket.IO chưa triển khai.
+- API Teacher `/api/dev/*` dùng actor demo, chỉ mount khi bật ENABLE_DEV_ROUTES=true trong môi trường không phải production. Mặc định tắt. `/preview/*` vẫn là demo local; main /login và /join dùng REST thật. Realtime Socket.IO và bảng xếp hạng sau mỗi N câu có trên branch `feat/realtime-leaderboard` ([chi tiết](docs/realtime-leaderboard.md)); cần áp migration 003.
 - `/health` chỉ kiểm tra HTTP server sống; `/ready` chạy `SELECT 1` để kiểm tra kết nối DB, **không xác nhận đầy đủ migrations/seed hoặc nghiệp vụ**.
 - CI gọi `npm ci` và `npm run check`, bao gồm tests BE/FE. Xem kết quả theo branch/PR trên GitHub Checks.
 

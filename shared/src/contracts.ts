@@ -31,20 +31,64 @@ export const resultSchema = z.object({
   score: z.number().int().nonnegative(), correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(),
   unanswered: z.number().int().nonnegative(), total: z.number().int().nonnegative(), accuracy: z.number().min(0).max(100),
 });
-export const snapshotSchema = z.object({
+// Leaderboard cadence chosen by the Teacher when hosting. Demo limit: every 1-10 questions;
+// null shows only the final leaderboard.
+export const LEADERBOARD_EVERY_MAX = 10;
+export const LEADERBOARD_TOP = 10;
+export const leaderboardEverySchema = z.number().int().min(1).max(LEADERBOARD_EVERY_MAX).nullable();
+export const hostInputSchema = z.strictObject({ quizId: z.guid(), leaderboardEvery: leaderboardEverySchema.default(null) });
+export const livePhaseSchema = z.enum(['QUESTION', 'LEADERBOARD']).nullable();
+export type LivePhase = z.infer<typeof livePhaseSchema>;
+// Competition ranking: equal scores share a rank (1, 1, 3).
+export const leaderboardEntrySchema = z.object({
+  participantId: z.guid(), nickname: z.string(), rank: z.number().int().positive(),
+  score: z.number().int().nonnegative(), correct: z.number().int().nonnegative(),
+});
+export type LeaderboardEntry = z.infer<typeof leaderboardEntrySchema>;
+export const studentLeaderboardSchema = z.object({
+  top: z.array(leaderboardEntrySchema).max(LEADERBOARD_TOP), me: leaderboardEntrySchema.nullable(), totalParticipants: z.number().int().nonnegative(),
+});
+const liveStateShape = {
   sessionId: z.guid(), title: z.string(), pin: pinSchema, status: z.enum(['WAITING', 'ACTIVE', 'FINISHED']),
   stateVersion: z.number().int().nonnegative(), currentPosition: z.number().int().positive().nullable(), totalQuestions: z.number().int().nonnegative(),
+  phase: livePhaseSchema, leaderboardEvery: leaderboardEverySchema,
+};
+export const snapshotSchema = z.object({
+  ...liveStateShape,
   currentQuestion: publicQuestionSchema.nullable(), hasAnsweredCurrentQuestion: z.boolean(),
   participant: z.object({ id: z.guid(), nickname: z.string() }), result: resultSchema.nullable(),
+  // Only present on a leaderboard step or after FINISHED, never while a question is open.
+  leaderboard: studentLeaderboardSchema.nullable(),
 });
 export type ParticipantSnapshot = z.infer<typeof snapshotSchema>;
 export const teacherSnapshotSchema = z.object({
-  sessionId: z.guid(), title: z.string(), pin: pinSchema, status: z.enum(['WAITING', 'ACTIVE', 'FINISHED']),
-  stateVersion: z.number().int().nonnegative(), currentPosition: z.number().int().positive().nullable(), totalQuestions: z.number().int().nonnegative(),
+  ...liveStateShape,
   participants: z.array(z.object({ id: z.guid(), nickname: z.string(), hasAnsweredCurrentQuestion: z.boolean(), result: resultSchema.nullable() })),
+  // The host follows the full live ranking at every step.
+  leaderboard: z.array(leaderboardEntrySchema),
 });
+export type TeacherSnapshot = z.infer<typeof teacherSnapshotSchema>;
 export const answerInputSchema = z.strictObject({ questionId: z.guid(), selectedOptionId: z.guid() });
 export const actionInputSchema = z.strictObject({ action: z.enum(['start', 'next', 'finish']), expectedVersion: z.number().int().nonnegative() });
+
+// Whether "next" from this state opens the leaderboard step instead of the next question.
+export function nextOpensLeaderboard(state: { status: string; phase: LivePhase; currentPosition: number | null; totalQuestions: number; leaderboardEvery: number | null }) {
+  return state.status !== 'FINISHED' && state.phase === 'QUESTION' && !!state.leaderboardEvery && !!state.currentPosition
+    && state.currentPosition < state.totalQuestions && state.currentPosition % state.leaderboardEvery === 0;
+}
+
+// Realtime is a server -> client notification channel. Payloads carry no answers or
+// scores; clients re-read their own authorized snapshot over REST.
+export const realtimeEvents = { changed: 'session:changed', revoked: 'session:revoked' } as const;
+export const realtimeAuthSchema = z.discriminatedUnion('kind', [
+  z.strictObject({ kind: z.literal('teacher'), sessionId: z.guid(), token: z.string().min(1).max(4096) }),
+  z.strictObject({ kind: z.literal('participant'), sessionId: z.guid(), token: z.string().regex(/^[A-Za-z0-9_-]{43}$/) }),
+]);
+export type RealtimeAuth = z.infer<typeof realtimeAuthSchema>;
+export const sessionChangedSchema = z.object({
+  sessionId: z.guid(), reason: z.enum(['lifecycle', 'roster', 'answer']), stateVersion: z.number().int().nonnegative().nullable(),
+});
+export type SessionChanged = z.infer<typeof sessionChangedSchema>;
 
 // stateVersion covers session actions. Participant answers can change at the same version.
 export function applySnapshot(previous: ParticipantSnapshot | undefined, next: ParticipantSnapshot) {

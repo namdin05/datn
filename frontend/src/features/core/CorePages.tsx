@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import { applySnapshot, participantCredentialSchema } from '@qforge/shared';
-import type { ParticipantCredential, ParticipantSnapshot, QuizInput } from '@qforge/shared';
+import { applySnapshot, LEADERBOARD_EVERY_MAX, nextOpensLeaderboard, participantCredentialSchema } from '@qforge/shared';
+import type { ParticipantCredential, ParticipantSnapshot, QuizInput, TeacherSnapshot } from '@qforge/shared';
 import { databaseApi, HttpApiError, sessionGateway, teacherApi } from '../../lib/api';
+import { getTeacherToken } from '../../lib/auth';
+import { LeaderboardTable, RealtimeBadge, useSessionRealtime } from './Leaderboard';
 import { PublicHeader, Footer } from '../../components/Common';
 import { PageState } from '../../components/PageState';
 import { Input } from '../../components/ui/input';
@@ -17,6 +19,7 @@ const emptyQuestion = () => ({ content: '', options: Array.from({ length: 4 }, (
 export function QuizEditor() {
   const { id } = useParams(); const navigate = useNavigate();
   const [input, setInput] = useState<QuizInput>({ title: '', description: '', questions: [] });
+  const [leaderboardEvery, setLeaderboardEvery] = useState<number | null>(2);
   const [status, setStatus] = useState('DRAFT'); const [loading, setLoading] = useState(!!id); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
   useEffect(() => {
     if (!id) { setInput({ title: '', description: '', questions: [] }); setStatus('DRAFT'); setLoading(false); setError(''); setNotice(''); return; }
@@ -36,7 +39,7 @@ export function QuizEditor() {
   }
   async function host() {
     if (!id) return; setBusy(true); setError('');
-    try { const s = await teacherApi.host(id); navigate(`/teacher/session/${s.sessionId}`); } catch (e) { setError(message(e)); } finally { setBusy(false); }
+    try { const s = await teacherApi.host(id, leaderboardEvery); navigate(`/teacher/session/${s.sessionId}`); } catch (e) { setError(message(e)); } finally { setBusy(false); }
   }
   async function remove() {
     if (!id || !window.confirm('Xóa đề này?')) return; setBusy(true); setError('');
@@ -44,13 +47,16 @@ export function QuizEditor() {
   }
   function editQuestion(index: number, update: Partial<QuizInput['questions'][number]>) { setInput(old => ({ ...old, questions: old.questions.map((q, i) => i === index ? { ...q, ...update } : q) })); }
   if (loading) return <PageState kind="loading" title="Đang tải đề" />;
-  return <><div className="page-heading"><h1>{id ? 'Soạn đề thi' : 'Tạo đề thi'}</h1><Link to="/teacher/quizzes">Về danh sách</Link></div>{error && <p role="alert" className="error">{error}</p>}{notice && <p role="status">{notice}</p>}<p>{status === 'PUBLISHED' ? 'Đã xuất bản' : 'Bản nháp'} · Mỗi câu đúng được 100 điểm</p><form onSubmit={e => { void save(e); }}><fieldset className="editor-fieldset" disabled={busy}><label>Tên đề<Input required maxLength={255} value={input.title} onChange={e => setInput(old => ({ ...old, title: e.target.value }))} /></label><label>Mô tả<Input maxLength={5000} value={input.description} onChange={e => setInput(old => ({ ...old, description: e.target.value }))} /></label>{input.questions.map((q, i) => <section className="card question-editor db-question" key={i}><label>Câu {i + 1}<Input maxLength={5000} value={q.content} onChange={e => editQuestion(i, { content: e.target.value })} /></label><div className="option-editor">{q.options.map((o, j) => <div key={j}><input type="radio" name={`correct-${i}`} checked={o.isCorrect} onChange={() => editQuestion(i, { options: q.options.map((option, k) => ({ ...option, isCorrect: k === j })) })} aria-label={`Đáp án đúng câu ${i + 1}: ${String.fromCharCode(65 + j)}`} /><Input aria-label={`Câu ${i + 1}, lựa chọn ${String.fromCharCode(65 + j)}`} maxLength={2000} value={o.content} onChange={e => editQuestion(i, { options: q.options.map((option, k) => k === j ? { ...option, content: e.target.value } : option) })} /></div>)}</div><Button variant="secondary" onClick={() => setInput(old => ({ ...old, questions: old.questions.filter((_, n) => n !== i) }))}>Xóa câu</Button></section>)}<div className="quiz-actions"><Button variant="secondary" disabled={input.questions.length >= 100} onClick={() => setInput(old => ({ ...old, questions: [...old.questions, emptyQuestion()] }))}>Thêm câu hỏi</Button><Button type="submit">Lưu bản nháp</Button>{id && <Button variant="secondary" onClick={() => { void publish(); }}>Lưu và xuất bản</Button>}{id && status === 'PUBLISHED' && <Button onClick={() => { void host(); }}>Mở phòng từ đề đã lưu</Button>}{id && <Button variant="destructive" onClick={() => { void remove(); }}>Xóa đề</Button>}</div></fieldset></form></>;
+  return <><div className="page-heading"><h1>{id ? 'Soạn đề thi' : 'Tạo đề thi'}</h1><Link to="/teacher/quizzes">Về danh sách</Link></div>{error && <p role="alert" className="error">{error}</p>}{notice && <p role="status">{notice}</p>}<p>{status === 'PUBLISHED' ? 'Đã xuất bản' : 'Bản nháp'} · Mỗi câu đúng được 100 điểm</p><form onSubmit={e => { void save(e); }}><fieldset className="editor-fieldset" disabled={busy}><label>Tên đề<Input required maxLength={255} value={input.title} onChange={e => setInput(old => ({ ...old, title: e.target.value }))} /></label><label>Mô tả<Input maxLength={5000} value={input.description} onChange={e => setInput(old => ({ ...old, description: e.target.value }))} /></label>{input.questions.map((q, i) => <section className="card question-editor db-question" key={i}><label>Câu {i + 1}<Input maxLength={5000} value={q.content} onChange={e => editQuestion(i, { content: e.target.value })} /></label><div className="option-editor">{q.options.map((o, j) => <div key={j}><input type="radio" name={`correct-${i}`} checked={o.isCorrect} onChange={() => editQuestion(i, { options: q.options.map((option, k) => ({ ...option, isCorrect: k === j })) })} aria-label={`Đáp án đúng câu ${i + 1}: ${String.fromCharCode(65 + j)}`} /><Input aria-label={`Câu ${i + 1}, lựa chọn ${String.fromCharCode(65 + j)}`} maxLength={2000} value={o.content} onChange={e => editQuestion(i, { options: q.options.map((option, k) => k === j ? { ...option, content: e.target.value } : option) })} /></div>)}</div><Button variant="secondary" onClick={() => setInput(old => ({ ...old, questions: old.questions.filter((_, n) => n !== i) }))}>Xóa câu</Button></section>)}<div className="quiz-actions"><Button variant="secondary" disabled={input.questions.length >= 100} onClick={() => setInput(old => ({ ...old, questions: [...old.questions, emptyQuestion()] }))}>Thêm câu hỏi</Button><Button type="submit">Lưu bản nháp</Button>{id && <Button variant="secondary" onClick={() => { void publish(); }}>Lưu và xuất bản</Button>}{id && status === 'PUBLISHED' && <><label className="host-option">Bảng xếp hạng cho học viên<select value={leaderboardEvery ?? ''} onChange={e => setLeaderboardEvery(e.target.value ? Number(e.target.value) : null)}><option value="">Chỉ khi kết thúc</option>{Array.from({ length: LEADERBOARD_EVERY_MAX }, (_, i) => i + 1).map(n => <option key={n} value={n}>Sau mỗi {n} câu và khi kết thúc</option>)}</select></label><Button onClick={() => { void host(); }}>Mở phòng từ đề đã lưu</Button></>}{id && <Button variant="destructive" onClick={() => { void remove(); }}>Xóa đề</Button>}</div></fieldset></form></>;
 }
 
 export function SessionControl() {
   const { id = '' } = useParams();
-  const [snapshot, setSnapshot] = useState<Awaited<ReturnType<typeof teacherApi.snapshot>>>();
+  const [snapshot, setSnapshot] = useState<TeacherSnapshot>();
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [version, setVersion] = useState(0);
+  const refresh = useCallback(() => setVersion(v => v + 1), []);
+  // Joins, answers and lifecycle changes arrive as notifications; the snapshot stays the source of truth.
+  const live = useSessionRealtime(id || undefined, async () => ({ kind: 'teacher', sessionId: id, token: await getTeacherToken() }), refresh);
   useEffect(() => {
     const controller = new AbortController();
     teacherApi.snapshot(id, controller.signal).then(s => { if (!controller.signal.aborted) { setSnapshot(old => old?.sessionId === s.sessionId && old.stateVersion > s.stateVersion ? old : s); setError(''); } }).catch(e => { if (!controller.signal.aborted) setError(message(e)); });
@@ -58,9 +64,19 @@ export function SessionControl() {
   }, [id, version]);
   async function action(value: 'start' | 'next' | 'finish') {
     if (!snapshot) return; setBusy(true); setError('');
-    try { setSnapshot(await teacherApi.action(id, value, snapshot.stateVersion)); } catch (e) { setError(message(e)); setVersion(v => v + 1); } finally { setBusy(false); }
+    try { setSnapshot(await teacherApi.action(id, value, snapshot.stateVersion)); } catch (e) { setError(message(e)); refresh(); } finally { setBusy(false); }
   }
-  return <>{error && <p role="alert" className="error">{error}</p>}{!snapshot ? <PageState kind={error ? 'error' : 'loading'} title={error ? 'Không tải được phòng' : 'Đang tải phiên'}><Button onClick={() => setVersion(v => v + 1)}>Thử lại</Button></PageState> : <><h1>{snapshot.title}</h1><p className="pin-display">PIN: <strong>{snapshot.pin}</strong></p><p>{snapshot.status === 'WAITING' ? 'Đang chờ học viên' : snapshot.status === 'ACTIVE' ? `Câu ${snapshot.currentPosition}/${snapshot.totalQuestions}` : 'Đã kết thúc'}</p><div className="quiz-actions"><Button variant="secondary" disabled={busy} onClick={() => setVersion(v => v + 1)}>Cập nhật phòng</Button>{snapshot.status === 'WAITING' && <Button disabled={busy} onClick={() => { void action('start'); }}>Bắt đầu</Button>}{snapshot.status === 'ACTIVE' && <><Button disabled={busy || snapshot.currentPosition === snapshot.totalQuestions} onClick={() => { void action('next'); }}>Câu tiếp theo</Button><Button variant="destructive" disabled={busy} onClick={() => { void action('finish'); }}>Kết thúc</Button></>}</div><h2>{snapshot.participants.length} người tham gia</h2>{!snapshot.participants.length && <PageState title="Chưa có học viên tham gia" description="Chia sẻ mã PIN và cập nhật phòng sau khi học viên vào." />}<div className="card table-wrap"><table><thead><tr><th>Học viên</th><th>Câu hiện tại</th><th>Đúng</th><th>Sai</th><th>Bỏ trống</th><th>Điểm</th><th>Accuracy</th></tr></thead><tbody>{snapshot.participants.map(p => <tr key={p.id}><td>{p.nickname} <small>({p.id.slice(0, 6)})</small></td><td>{p.hasAnsweredCurrentQuestion ? 'Đã trả lời' : 'Chưa trả lời'}</td><td>{p.result?.correct ?? '—'}</td><td>{p.result?.incorrect ?? '—'}</td><td>{p.result?.unanswered ?? '—'}</td><td>{p.result?.score ?? '—'}</td><td>{p.result ? `${p.result.accuracy}%` : '—'}</td></tr>)}</tbody></table></div></>}</>;
+  if (!snapshot) return <>{error && <p role="alert" className="error">{error}</p>}<PageState kind={error ? 'error' : 'loading'} title={error ? 'Không tải được phòng' : 'Đang tải phiên'}><Button onClick={refresh}>Thử lại</Button></PageState></>;
+  const onBoard = snapshot.phase === 'LEADERBOARD';
+  const answered = new Map(snapshot.participants.map(p => [p.id, p.hasAnsweredCurrentQuestion]));
+  const answeredCount = snapshot.participants.filter(p => p.hasAnsweredCurrentQuestion).length;
+  const stage = snapshot.status === 'WAITING' ? 'Đang chờ học viên' : snapshot.status === 'FINISHED' ? 'Đã kết thúc'
+    : onBoard ? `Học viên đang xem bảng xếp hạng sau câu ${snapshot.currentPosition}/${snapshot.totalQuestions}`
+    : `Câu ${snapshot.currentPosition}/${snapshot.totalQuestions} · ${answeredCount}/${snapshot.participants.length} đã trả lời`;
+  const isLast = !onBoard && snapshot.currentPosition === snapshot.totalQuestions;
+  return <>{error && <p role="alert" className="error">{error}</p>}<h1>{snapshot.title}</h1><p className="pin-display">PIN: <strong>{snapshot.pin}</strong></p><RealtimeBadge status={live} /><p>{stage}</p><p className="muted">{snapshot.leaderboardEvery ? `Học viên xem bảng xếp hạng sau mỗi ${snapshot.leaderboardEvery} câu và khi kết thúc.` : 'Học viên chỉ xem bảng xếp hạng khi kết thúc.'}</p>
+    <div className="quiz-actions"><Button variant="secondary" disabled={busy} onClick={refresh}>Cập nhật phòng</Button>{snapshot.status === 'WAITING' && <Button disabled={busy} onClick={() => { void action('start'); }}>Bắt đầu</Button>}{snapshot.status === 'ACTIVE' && <><Button disabled={busy || isLast} onClick={() => { void action('next'); }}>{nextOpensLeaderboard(snapshot) ? 'Hiện bảng xếp hạng' : 'Câu tiếp theo'}</Button><Button variant="destructive" disabled={busy} onClick={() => { void action('finish'); }}>Kết thúc</Button></>}</div>
+    <h2>{snapshot.status === 'FINISHED' ? 'Bảng xếp hạng chung cuộc' : 'Bảng xếp hạng trực tiếp'} · {snapshot.participants.length} người tham gia</h2>{!snapshot.participants.length ? <PageState title="Chưa có học viên tham gia" description="Chia sẻ mã PIN; danh sách tự cập nhật khi học viên vào." /> : <LeaderboardTable entries={snapshot.leaderboard} answered={snapshot.status === 'ACTIVE' && !onBoard ? answered : undefined} />}</>;
 }
 
 const credentialKey = (id: string) => `qforge-credential:${id}`;
@@ -94,6 +110,10 @@ export function StudentSession() {
   const submitting = useRef(false);
   const refresh = useCallback(() => setVersion(v => v + 1), []);
   useEffect(() => { credential.current = readCredential(id); setSnapshot(undefined); setSelection(undefined); }, [id]);
+  const forget = useCallback(() => { sessionStorage.removeItem(credentialKey(id)); sessionStorage.removeItem('qforge-last-session'); navigate('/join'); }, [id, navigate]);
+  // A lifecycle broadcast reaches the whole class at once; jitter spreads the snapshot reads.
+  const live = useSessionRealtime(credential.current ? id : undefined, async () => ({ kind: 'participant', sessionId: id, token: credential.current?.token ?? '' }),
+    change => { if (change) setTimeout(refresh, Math.random() * 300); else refresh(); }, forget);
   useEffect(() => {
     const c = credential.current; if (!c) return;
     const controller = new AbortController(); const current = ++generation.current;
@@ -109,8 +129,12 @@ export function StudentSession() {
   }
   async function leave() {
     const c = credential.current; if (!c) return; setBusy(true); setError('');
-    try { await sessionGateway.revoke(c); sessionStorage.removeItem(credentialKey(id)); sessionStorage.removeItem('qforge-last-session'); navigate('/join'); } catch (e) { setError(message(e)); } finally { setBusy(false); }
+    try { await sessionGateway.revoke(c); forget(); } catch (e) { setError(message(e)); } finally { setBusy(false); }
   }
-  const q = snapshot?.currentQuestion;
-  return <><PublicHeader /><main id="main-content" className="setup-container">{!credential.current ? <PageState title="Chưa có phiên tham gia"><Button asChild><Link to="/join">Nhập PIN để tham gia</Link></Button></PageState> : <>{error && <p role="alert" className="error">{error}</p>}{!snapshot ? <PageState kind={error ? 'error' : 'loading'} title={error ? 'Không tải được phiên' : 'Đang tải phiên'}><Button onClick={refresh}>Thử lại</Button><Link to="/join">Về trang tham gia</Link></PageState> : <><h1>{snapshot.title}</h1><p>Xin chào {snapshot.participant.nickname}</p>{snapshot.status === 'WAITING' && <PageState title="Đang đợi giảng viên bắt đầu" />}{q && <section className="card question-editor"><h2>Câu {q.position}/{snapshot.totalQuestions}: {q.content}</h2><fieldset className="student-options" disabled={busy || snapshot.hasAnsweredCurrentQuestion}>{q.options.map(o => <label className={`student-option ${selection?.questionId === q.id && selection.optionId === o.id ? 'chosen' : ''}`} key={o.id}><input type="radio" name="answer" checked={selection?.questionId === q.id && selection.optionId === o.id} onChange={() => { void submit(o.id); }} /><span>{String.fromCharCode(64 + o.position)}. {o.content}</span></label>)}</fieldset>{busy && <p role="status">Đang lưu câu trả lời…</p>}{snapshot.hasAnsweredCurrentQuestion && <p role="status">Đã lưu câu trả lời. Chờ câu tiếp theo.</p>}</section>}{snapshot.result && <section className="card setup-panel"><h2>Kết quả</h2><p>Điểm: {snapshot.result.score}</p><p>Đúng: {snapshot.result.correct}/{snapshot.result.total} · Sai: {snapshot.result.incorrect} · Bỏ trống: {snapshot.result.unanswered}</p><p>Accuracy: {snapshot.result.accuracy}%</p></section>}<div className="quiz-actions"><Button variant="secondary" disabled={busy} onClick={refresh}>Cập nhật phiên</Button><Button variant="secondary" disabled={busy} onClick={() => { void leave(); }}>Rời phiên</Button></div></>}</>}</main><Footer /></>;
+  const q = snapshot?.currentQuestion; const board = snapshot?.leaderboard;
+  return <><PublicHeader /><main id="main-content" className="setup-container">{!credential.current ? <PageState title="Chưa có phiên tham gia"><Button asChild><Link to="/join">Nhập PIN để tham gia</Link></Button></PageState> : <>{error && <p role="alert" className="error">{error}</p>}{!snapshot ? <PageState kind={error ? 'error' : 'loading'} title={error ? 'Không tải được phiên' : 'Đang tải phiên'}><Button onClick={refresh}>Thử lại</Button><Link to="/join">Về trang tham gia</Link></PageState> : <><h1>{snapshot.title}</h1><p>Xin chào {snapshot.participant.nickname}</p><RealtimeBadge status={live} />{snapshot.status === 'WAITING' && <PageState title="Đang đợi giảng viên bắt đầu" />}
+    {q && <section className="card question-editor"><h2>Câu {q.position}/{snapshot.totalQuestions}: {q.content}</h2><fieldset className="student-options" disabled={busy || snapshot.hasAnsweredCurrentQuestion}>{q.options.map(o => <label className={`student-option ${selection?.questionId === q.id && selection.optionId === o.id ? 'chosen' : ''}`} key={o.id}><input type="radio" name="answer" checked={selection?.questionId === q.id && selection.optionId === o.id} onChange={() => { void submit(o.id); }} /><span>{String.fromCharCode(64 + o.position)}. {o.content}</span></label>)}</fieldset>{busy && <p role="status">Đang lưu câu trả lời…</p>}{snapshot.hasAnsweredCurrentQuestion && <p role="status">Đã lưu câu trả lời. Chờ câu tiếp theo.</p>}</section>}
+    {snapshot.result && <section className="card setup-panel"><h2>Kết quả</h2><p>Điểm: {snapshot.result.score}</p><p>Đúng: {snapshot.result.correct}/{snapshot.result.total} · Sai: {snapshot.result.incorrect} · Bỏ trống: {snapshot.result.unanswered}</p><p>Accuracy: {snapshot.result.accuracy}%</p></section>}
+    {board && <section className="leaderboard-panel"><h2>{snapshot.status === 'FINISHED' ? 'Bảng xếp hạng chung cuộc' : `Bảng xếp hạng sau câu ${snapshot.currentPosition}/${snapshot.totalQuestions}`}</h2>{board.me && <p>Bạn đang xếp hạng <strong>#{board.me.rank}</strong>/{board.totalParticipants} với {board.me.score} điểm.</p>}<LeaderboardTable entries={board.top} highlight={snapshot.participant.id} />{snapshot.phase === 'LEADERBOARD' && <p className="muted">Chờ giảng viên chuyển sang câu tiếp theo…</p>}</section>}
+    <div className="quiz-actions"><Button variant="secondary" disabled={busy} onClick={refresh}>Cập nhật phiên</Button><Button variant="secondary" disabled={busy} onClick={() => { void leave(); }}>Rời phiên</Button></div></>}</>}</main><Footer /></>;
 }

@@ -8,7 +8,7 @@ import type { Pool } from 'pg';
 export async function isolatedPostgres() {
   const engine = new PGlite({ extensions: { pgcrypto } });
   await engine.waitReady;
-  for (const name of ['001_initial_schema.sql', '002_identity_live_state.sql']) await engine.exec(await readFile(new URL(`../../../database/migrations/${name}`, import.meta.url), 'utf8'));
+  for (const name of ['001_initial_schema.sql', '002_identity_live_state.sql', '003_live_leaderboard.sql']) await engine.exec(await readFile(new URL(`../../../database/migrations/${name}`, import.meta.url), 'utf8'));
   let tail = Promise.resolve();
   async function lock() {
     const previous = tail; let release = () => {};

@@ -15,14 +15,24 @@ import { createServices } from './modules/application.js';
 import { apiRouter } from './modules/api.routes.js';
 import { publicRoomRouter } from './modules/reporting/report.routes.js';
 import { requireTeacher } from './auth/teacher.js';
+import type { SessionEvents } from './modules/session-events.js';
+
+// Auth adapters and services shared by the REST app and the Socket.IO adapter.
+export function createBackendRuntime(config: AppConfig, db: Pool, options: { verifyTeacherToken?: VerifyTeacherToken; events?: SessionEvents } = {}) {
+  const verify = options.verifyTeacherToken ?? (config.SUPABASE_URL ? createTeacherVerifier(config.SUPABASE_URL) : undefined);
+  const credentials = config.PARTICIPANT_TOKEN_HASH_SECRET ? new ParticipantTokens(config.PARTICIPANT_TOKEN_HASH_SECRET, config.PARTICIPANT_TOKEN_TTL_SECONDS) : undefined;
+  return { db, verify, credentials, services: createServices(db, credentials, options.events) };
+}
+export type BackendRuntime = ReturnType<typeof createBackendRuntime>;
 
 export function createApp(config: AppConfig, options: {
   db?: Pool;
+  runtime?: BackendRuntime;
   apiRouter?: Router;
   errorLogger?: ErrorLogger;
   verifyTeacherToken?: VerifyTeacherToken;
 } = {}) {
-  const { db } = options;
+  const db = options.runtime?.db ?? options.db;
   const app = express();
   app.disable("x-powered-by");
   app.use(cors({ origin: config.FRONTEND_ORIGINS }));
@@ -45,9 +55,7 @@ export function createApp(config: AppConfig, options: {
   });
 
   if (db) {
-    const verify = options.verifyTeacherToken ?? (config.SUPABASE_URL ? createTeacherVerifier(config.SUPABASE_URL) : undefined);
-    const tokens = config.PARTICIPANT_TOKEN_HASH_SECRET ? new ParticipantTokens(config.PARTICIPANT_TOKEN_HASH_SECRET, config.PARTICIPANT_TOKEN_TTL_SECONDS) : undefined;
-    const services = createServices(db, tokens);
+    const { verify, services } = options.runtime ?? createBackendRuntime(config, db, { verifyTeacherToken: options.verifyTeacherToken });
     app.use('/api/rooms', publicRoomRouter(services.reports));
     app.use('/api', (_req, res, next) => { res.setHeader('Cache-Control', 'no-store'); next(); });
     // A privileged development escape hatch must be explicitly opted into.

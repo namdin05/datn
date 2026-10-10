@@ -7,5 +7,7 @@ export interface SessionRow {
   status: 'WAITING' | 'IN_PROGRESS' | 'FINISHED';
   state_version: number;
   current_question_position: number | null;
+  live_phase: 'QUESTION' | 'LEADERBOARD' | null;
+  leaderboard_every: number | null;
 }
 export type SessionAction = 'start' | 'next' | 'finish';
