@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+// Validation messages (field details shown in the UI) default to Vietnamese for FE and BE.
+z.config(z.locales.vi());
+
 export * from "./api.js";
 export * from "./contracts.js";
 

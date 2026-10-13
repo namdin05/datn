@@ -8,7 +8,7 @@ export const draftQuestionSchema = z.strictObject({
   options: z.array(z.strictObject({ content: z.string().trim().max(2000), isCorrect: z.boolean() })).length(4),
 });
 export const quizInputSchema = z.strictObject({
-  title: z.string().trim().min(1).max(255),
+  title: z.string().trim().min(1, 'Nhập tên đề.').max(255, 'Tên đề tối đa 255 ký tự.'),
   description: z.string().trim().max(5000).default(''),
   questions: z.array(draftQuestionSchema).max(100).default([]),
 });
@@ -22,7 +22,7 @@ export const teacherQuestionSchema = publicQuestionSchema.extend({
 });
 export type PublicQuestion = z.infer<typeof publicQuestionSchema>;
 export type TeacherQuestion = z.infer<typeof teacherQuestionSchema>;
-export const joinInputSchema = z.strictObject({ pin: pinSchema, nickname: z.string().trim().min(1).max(100), requestId: z.guid() });
+export const joinInputSchema = z.strictObject({ pin: pinSchema, nickname: z.string().trim().min(1, 'Nhập tên hiển thị.').max(100, 'Tên hiển thị tối đa 100 ký tự.'), requestId: z.guid() });
 export const participantCredentialSchema = z.object({
   sessionId: z.guid(), participantId: z.guid(), token: z.string().regex(/^[A-Za-z0-9_-]{43}$/), expiresAt: z.iso.datetime(),
 });

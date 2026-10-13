@@ -54,7 +54,7 @@ test("readiness without DB returns a shared 503 while health remains live", asyn
   const response = await fetch(`${url}/ready`);
   assert.equal(response.status, 503);
   assert.deepEqual(apiFailureSchema.parse(await response.json()), {
-    success: false, error: { code: "DB_UNAVAILABLE", message: "Database is unavailable." },
+    success: false, error: { code: "DB_UNAVAILABLE", message: "Cơ sở dữ liệu hiện không khả dụng." },
   });
   const health = await fetch(`${url}/health`);
   assert.equal(health.status, 200);
@@ -77,7 +77,7 @@ test("readiness hides DB failures and preserves the 503 code", async (context) =
   const response = await fetch(`${url}/ready`);
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), {
-    success: false, error: { code: "DB_UNAVAILABLE", message: "Database is unavailable." },
+    success: false, error: { code: "DB_UNAVAILABLE", message: "Cơ sở dữ liệu hiện không khả dụng." },
   });
 });
 
@@ -129,7 +129,7 @@ test("DB read failures go through the shared internal-error handler", async (con
   const { url, errors } = await startApp(context, Router(), { db: pool });
   const response = await fetch(`${url}/api/dev/dashboard`);
   assert.equal(response.status, 500);
-  assert.deepEqual(await response.json(), { success: false, error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred." } });
+  assert.deepEqual(await response.json(), { success: false, error: { code: "INTERNAL_ERROR", message: "Đã xảy ra lỗi không mong muốn." } });
   assert.deepEqual(errors, [failure]);
 });
 
@@ -152,7 +152,7 @@ test("unknown endpoints return the shared NOT_FOUND envelope", async (context) =
   const response = await fetch(`${url}/api/missing`);
   assert.equal(response.status, 404);
   assert.deepEqual(apiFailureSchema.parse(await response.json()), {
-    success: false, error: { code: "NOT_FOUND", message: "Endpoint not found." },
+    success: false, error: { code: "NOT_FOUND", message: "Không tìm thấy đường dẫn API." },
   });
   assert.equal(errors.length, 0);
 });
@@ -294,7 +294,7 @@ test("async route failures, internal ApiErrors and unexpected validation errors 
   for (const index of failures.keys()) {
     const response = await fetch(`${url}/api/failure-${index}`);
     assert.equal(response.status, 500);
-    assert.deepEqual(await response.json(), { success: false, error: { code: "INTERNAL_ERROR", message: "An unexpected error occurred." } });
+    assert.deepEqual(await response.json(), { success: false, error: { code: "INTERNAL_ERROR", message: "Đã xảy ra lỗi không mong muốn." } });
   }
   const brokenSchema = await fetch(`${url}/api/broken-schema`, jsonPost({ title: "Demo" }));
   assert.equal(brokenSchema.status, 500);
