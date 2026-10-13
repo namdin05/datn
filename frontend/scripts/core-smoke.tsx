@@ -60,13 +60,13 @@ try {
   assert.ok(container.querySelector('fieldset')!.disabled);
   await service.sessions.action(actor, session.sessionId, 'finish', started.stateVersion);
   await act(async () => [...container.querySelectorAll('button')].find(b => b.textContent === 'Cập nhật phiên')!.click());
-  await waitFor(() => container.textContent!.includes('Accuracy: 100%'));
+  await waitFor(() => container.textContent!.includes('Tỉ lệ đúng: 100%'));
   assert.match(container.textContent!, /Điểm: 100/);
-  await reset(); await student(); await waitFor(() => container.textContent!.includes('Accuracy: 100%'));
+  await reset(); await student(); await waitFor(() => container.textContent!.includes('Tỉ lệ đúng: 100%'));
   await act(async () => [...container.querySelectorAll('button')].find(b => b.textContent === 'Rời phiên')!.click());
   await waitFor(() => sessionStorage.getItem(`qforge-credential:${session.sessionId}`) === null);
   assert.equal((await realFetch(base + `/api/participants/sessions/${session.sessionId}`, { headers: { Authorization: `Bearer ${credential.token}` } })).status, 401);
-  mode = 'malformed'; await assert.rejects(requestApi('/test', snapshotSchema), /contract/);
+  mode = 'malformed'; await assert.rejects(requestApi('/test', snapshotSchema), /định dạng/);
   mode = 'failure'; await assert.rejects(requestApi('/test', snapshotSchema), error => error instanceof HttpApiError && error.status === 400 && error.error.details?.[0]?.field === 'nickname');
   console.log('PASS: protected Teacher route, REST Student lobby/submit, refresh preserves hasAnswered, final result, credential revocation, malformed response and field errors.');
 } finally {

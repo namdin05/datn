@@ -16,13 +16,13 @@ export async function requestApi<T>(path: string, schema: z.ZodType<T>, options:
     ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
   });
   const parsed = createApiResponseSchema(schema).safeParse(await response.json().catch(() => null));
-  if (!parsed.success || (response.ok && !parsed.data.success) || (!response.ok && parsed.data.success)) throw new Error('Phản hồi server không đúng contract.');
+  if (!parsed.success || (response.ok && !parsed.data.success) || (!response.ok && parsed.data.success)) throw new Error('Phản hồi từ máy chủ không đúng định dạng.');
   if (!parsed.data.success) throw new HttpApiError(response.status, parsed.data.error);
   return parsed.data.data;
 }
 export async function fetchHealth() {
   const response = await fetch(`${apiUrl}/health`, { signal: AbortSignal.timeout(5000) });
-  if (!response.ok) throw new Error(`API returned HTTP ${response.status}.`);
+  if (!response.ok) throw new Error(`Máy chủ trả về lỗi HTTP ${response.status}.`);
   return healthResponseSchema.parse(await response.json());
 }
 export const databaseApi = {

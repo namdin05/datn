@@ -7,6 +7,9 @@ export function RouteEffects() {
     const title = pathname.startsWith('/teacher/editor') ? 'Soạn đề thi' : pathname.startsWith('/teacher/session/') ? 'Phòng thi' : pathname === '/teacher/sessions' ? 'Phiên trực tiếp' : pathname === '/teacher/reports' ? 'Báo cáo' : pathname === '/teacher/quizzes' ? 'Đề thi của tôi' : pathname.startsWith('/student/') ? 'Phiên học' : pathname === '/login' ? 'Tài khoản giảng viên' : pathname === '/setup' ? 'Kiểm tra kết nối' : 'Tham gia phòng thi';
     document.title = `${title} · QForge`;
     window.scrollTo({ top: 0, behavior: 'instant' });
+    // Teacher pages scroll inside the content column, which persists across routes.
+    const teacherBody = document.querySelector('.teacher-body');
+    if (teacherBody) teacherBody.scrollTop = 0;
     const frame = requestAnimationFrame(() => {
       const main = document.getElementById('main-content');
       main?.setAttribute('tabindex', '-1');

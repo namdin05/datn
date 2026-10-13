@@ -41,7 +41,7 @@ export function subscribeSession(getAuth: () => Promise<RealtimeAuth>, handlers:
 }
 
 export const realtimeLabel: Record<RealtimeStatus, string> = {
-  connecting: 'Đang kết nối realtime…',
+  connecting: 'Đang kết nối trực tiếp…',
   live: 'Đang cập nhật trực tiếp',
-  offline: 'Mất kết nối realtime, đang thử lại…',
+  offline: 'Mất kết nối trực tiếp, đang thử lại…',
 };

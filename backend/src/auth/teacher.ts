@@ -23,7 +23,7 @@ export function createTeacherVerifier(supabaseUrl: string): VerifyTeacherToken {
 export async function resolveTeacher(db: Pool, verify: VerifyTeacherToken, token: string): Promise<TeacherActor> {
   const subject = await verify(token);
   const row = await userRepository(db).findByAuthSubject(subject);
-  if (!row || row.role !== 'TEACHER') throw new ApiError('FORBIDDEN', { message: 'Tài khoản chưa được liên kết với Teacher QForge.' });
+  if (!row || row.role !== 'TEACHER') throw new ApiError('FORBIDDEN', { message: 'Tài khoản chưa được liên kết với giảng viên QForge.' });
   return { id: row.id, name: row.display_name, role: 'TEACHER' };
 }
 
@@ -35,7 +35,7 @@ export function bearerToken(header: string | undefined) {
 
 export function requireTeacher(db: Pool, verify?: VerifyTeacherToken): RequestHandler {
   return async (req, res, next) => {
-    if (!verify) throw new ApiError('DB_UNAVAILABLE', { message: 'Supabase Auth chưa được cấu hình.' });
+    if (!verify) throw new ApiError('DB_UNAVAILABLE', { message: 'Đăng nhập giảng viên (Supabase Auth) chưa được cấu hình.' });
     res.locals.teacher = await resolveTeacher(db, verify, bearerToken(req.headers.authorization));
     next();
   };

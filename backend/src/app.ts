@@ -65,7 +65,7 @@ export function createApp(config: AppConfig, options: {
   app.use("/api", options.apiRouter ?? Router());
 
   app.use((_request, _response, next) => {
-    next(new ApiError("NOT_FOUND", { message: "Endpoint not found." }));
+    next(new ApiError("NOT_FOUND", { message: "Không tìm thấy đường dẫn API." }));
   });
   app.use(createErrorHandler(options.errorLogger));
   return app;

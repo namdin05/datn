@@ -6,7 +6,7 @@ type Store = { quizzes: Quiz[]; sessions: Session[] };
 const key = 'qforge-demo-v1';
 const question = (text: string, options: string[], correct: number): Question => ({ id: crypto.randomUUID(), text, options, correct });
 const initial: Store = { sessions: [], quizzes: [
-  { id: 'software', title: 'Software Engineering Fundamentals', description: 'Kiểm tra kiến thức về quy trình phát triển phần mềm, thiết kế kiến trúc và cơ sở dữ liệu.', published: true, questions: [
+  { id: 'software', title: 'Nhập môn Công nghệ phần mềm', description: 'Kiểm tra kiến thức về quy trình phát triển phần mềm, thiết kế kiến trúc và cơ sở dữ liệu.', published: true, questions: [
     question('Mục đích chính của Primary Key (Khóa chính) trong cơ sở dữ liệu quan hệ là gì?', ['Mã hóa dữ liệu để tăng tính bảo mật', 'Định danh duy nhất mỗi bản ghi trong bảng', 'Tự động sao lưu cơ sở dữ liệu', 'Kết nối cơ sở dữ liệu với REST API'], 1),
     question('HTTP là viết tắt của cụm từ nào?', ['HyperText Transfer Protocol', 'High Transfer Text Process', 'Hyper Terminal Transfer Program', 'Host Transfer Protocol'], 0),
     question('Trong mô hình Agile, một Sprint là gì?', ['Một bản phát hành cuối cùng', 'Một giai đoạn làm việc có thời lượng cố định', 'Một tài liệu yêu cầu', 'Một loại kiểm thử'], 1),
